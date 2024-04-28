@@ -80,7 +80,6 @@ const dataSource = [
 		dob: moment().subtract(32, 'years').format('YYYY-MM-DD'),
 		dateJoin: moment().subtract(4, 'days').format('YYYY-MM-DD'),
 	},
-	// Add 2 more data objects...
 	{
 		key: '9',
 		user: 'Sarah Lee',
@@ -109,7 +108,7 @@ export const UserPage = () => {
 
 	const handleCreateUser = () => {
 		setModalVisible(true);
-		form.resetFields(); // Reset form fields when creating a new user
+		form.resetFields();
 	};
 
 	const handleEdit = (record) => {
@@ -133,7 +132,6 @@ export const UserPage = () => {
 
 	const handleDeleteConfirm = () => {
 		console.log('Deleting user:', selectedUser);
-		// Perform delete operation here
 		setDeleteModalVisible(false);
 	};
 
@@ -180,7 +178,7 @@ export const UserPage = () => {
 						align="center"
 						render={(role) => (
 							<Tag
-								style={{width: 80, textAlign: 'center'}}
+								style={{textAlign: 'center'}}
 								color={
 									role === 'Người dùng'
 										? '#ab741a'

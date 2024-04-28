@@ -1,4 +1,4 @@
-.userContainer {
+.betContainer {
 	width: 100%;
 	height: 100%;
 	flex-shrink: 0;
@@ -7,12 +7,12 @@
 	box-shadow: 0px 20px 27px 0px rgba(0, 0, 0, 0.05);
 }
 
-.userTitle {
+.betTitle {
 	width: 233.978px;
 	padding: 10px 0;
 }
 
-.userTitle h1 {
+.betTitle h1 {
 	font-size: 24px;
 	font-weight: bold;
 	color: #4878d9;
