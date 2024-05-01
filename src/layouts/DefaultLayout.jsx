@@ -6,6 +6,8 @@ import {useSelector} from 'react-redux';
 import {Header} from '../components/Header/Header';
 import {DashboardOutlined, UserOutlined} from '@ant-design/icons';
 import {imageExporter} from '../assets/images';
+import LoginPage from '../pages/LoginPage/LoginPage';
+import SignUpPage from '../pages/SignUpPage/SignUp';
 
 const {Footer, Sider, Content} = Layout;
 
@@ -29,6 +31,8 @@ export const DefaultLayout = ({children}) => {
 	const pageLocation = [
 		'/dashboard',
 		'/users',
+		// '/login',
+		// '/signup',
 		//add more pages here
 	];
 
@@ -36,6 +40,7 @@ export const DefaultLayout = ({children}) => {
 	const items = [
 		getItem('Dashboard', '/dashboard', <DashboardOutlined />),
 		getItem('User', '/users', <UserOutlined />),
+		
 		//add more items here
 	];
 
