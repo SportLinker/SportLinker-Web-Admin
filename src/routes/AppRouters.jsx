@@ -5,6 +5,7 @@ import {DashboardPage} from '../pages/DashboardPage/DashboardPage';
 import {NotFoundPage} from '../pages/NotFoundPage/NotFoundPage';
 import PermissionDeniedPage from '../pages/PermissionDeniedPage/PermissionDeniedPage';
 import {UserPage} from '../pages/UserPage/UserPage';
+import {BetPage} from '../pages/BetPage/BetPage';
 
 export const AppRouters = () => {
 	return (
@@ -13,6 +14,7 @@ export const AppRouters = () => {
 				<Route path="/" element={<Navigate to="/dashboard" />}></Route>
 				<Route path="/dashboard" element={<DashboardPage />}></Route>
 				<Route path="/users" element={<UserPage />}></Route>
+				<Route path="/bets" element={<BetPage />}></Route>
 				<Route path="/permission-denied" element={<PermissionDeniedPage />}></Route>
 				<Route path="*" element={<NotFoundPage />} />
 			</Routes>
