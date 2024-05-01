@@ -10,7 +10,7 @@ export const Header = () => {
 					padding: '0px 20px',
 					paddingTop: 15,
 					paddingLeft: 30,
-					background: 'linear-gradient(to right, #1f52b9, #4478ff)',
+					background: 'linear-gradient(to right, #4478ff, #1f52b9)',
 					borderRadius: 12,
 					textAlign: 'left',
 					borderBottom: '1px solid #f5f5f5',

@@ -4,7 +4,7 @@ import {Link, useLocation, useNavigate} from 'react-router-dom';
 import {getUserSelector} from '../redux/selectors';
 import {useSelector} from 'react-redux';
 import {Header} from '../components/Header/Header';
-import {DashboardOutlined, UserOutlined} from '@ant-design/icons';
+import {DashboardOutlined, DisconnectOutlined, UserOutlined} from '@ant-design/icons';
 import {imageExporter} from '../assets/images';
 import LoginPage from '../pages/LoginPage/LoginPage';
 import SignUpPage from '../pages/SignUpPage/SignUp';
@@ -31,8 +31,7 @@ export const DefaultLayout = ({children}) => {
 	const pageLocation = [
 		'/dashboard',
 		'/users',
-		// '/login',
-		// '/signup',
+		'/bets',
 		//add more pages here
 	];
 
@@ -40,7 +39,7 @@ export const DefaultLayout = ({children}) => {
 	const items = [
 		getItem('Dashboard', '/dashboard', <DashboardOutlined />),
 		getItem('User', '/users', <UserOutlined />),
-		
+		getItem('Bet', '/bets', <DisconnectOutlined />),
 		//add more items here
 	];
 

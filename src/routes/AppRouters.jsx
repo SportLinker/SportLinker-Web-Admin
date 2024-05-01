@@ -7,6 +7,7 @@ import PermissionDeniedPage from '../pages/PermissionDeniedPage/PermissionDenied
 import {UserPage} from '../pages/UserPage/UserPage';
 import LoginPage from '../pages/LoginPage/LoginPage';
 import SignUpPage from '../pages/SignUpPage/SignUp';
+import {BetPage} from '../pages/BetPage/BetPage';
 
 export const AppRouters = () => {
 	return (
@@ -17,6 +18,7 @@ export const AppRouters = () => {
 				<Route path="/users" element={<UserPage />}></Route>
 				<Route path="/login" element={<LoginPage />}></Route>
 				<Route path="/signup" element={<SignUpPage />}></Route>
+				<Route path="/bets" element={<BetPage />}></Route>
 				<Route path="/permission-denied" element={<PermissionDeniedPage />}></Route>
 				<Route path="*" element={<NotFoundPage />} />
 			</Routes>
