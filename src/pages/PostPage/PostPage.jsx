@@ -181,7 +181,7 @@ export const PostPage = () => {
 	const fields = [
 		{label: 'By User', name: 'byUser'},
 		{label: 'Title', name: 'title'},
-		{label: 'Content', name: 'content',type:'TextArea'},
+		{label: 'Content', name: 'content', type: 'TextArea'},
 		{label: 'Img Url', name: 'imgUrl'},
 		{label: 'Video Url', name: 'videoUrl'},
 		{label: 'Created At', name: 'createdAt', type: 'Date'}, // Modify this line
@@ -243,27 +243,31 @@ export const PostPage = () => {
 						)}
 					/>
 					<Column
-    title="Img Url"
-    dataIndex="imgUrl"
-    key="imgUrl"
-    ellipsis={{ showTitle: false }}
-    render={(text) => (
-        <Tooltip placement="topLeft" title={text}>
-            <a href={text} target="_blank" rel="noopener noreferrer">{text}</a>
-        </Tooltip>
-    )}
-/>
-<Column
-    title="Video Url"
-    dataIndex="videoUrl"
-    key="videoUrl"
-    ellipsis={{ showTitle: false }}
-    render={(text) => (
-        <Tooltip placement="topLeft" title={text}>
-            <a href={text} target="_blank" rel="noopener noreferrer">{text}</a>
-        </Tooltip>
-    )}
-/>
+						title="Img Url"
+						dataIndex="imgUrl"
+						key="imgUrl"
+						ellipsis={{showTitle: false}}
+						render={(text) => (
+							<Tooltip placement="topLeft" title={text}>
+								<a href={text} target="_blank" rel="noopener noreferrer">
+									{text}
+								</a>
+							</Tooltip>
+						)}
+					/>
+					<Column
+						title="Video Url"
+						dataIndex="videoUrl"
+						key="videoUrl"
+						ellipsis={{showTitle: false}}
+						render={(text) => (
+							<Tooltip placement="topLeft" title={text}>
+								<a href={text} target="_blank" rel="noopener noreferrer">
+									{text}
+								</a>
+							</Tooltip>
+						)}
+					/>
 
 					<Column title="Created At" dataIndex="createdAt" key="createdAt" />
 					<Column
