@@ -15,12 +15,7 @@ const LoginPage = () => {
 					<h1>Sign In</h1>
 				</div>
 				<div className={styles.loginForm}>
-					<Form
-						name="basic"
-						initialValues={{remember: true}}
-						onFinish={onFinish}
-						className={styles.formContainer}
-					>
+					<Form name="basic" onFinish={onFinish} className={styles.formContainer}>
 						<Form.Item
 							className={styles.formItem}
 							label="Email"
@@ -40,7 +35,7 @@ const LoginPage = () => {
 						</Form.Item>
 
 						<div className={styles.formItemsContainer}>
-							<Form.Item name="remember" valuePropName="checked">
+							<Form.Item name="remember">
 								<Checkbox className={styles.rememberCheckbox}>
 									Remember password?
 								</Checkbox>
