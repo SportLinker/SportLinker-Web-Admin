@@ -1,13 +1,19 @@
+import {
+	DashboardOutlined,
+	DisconnectOutlined,
+	EditOutlined,
+	FileTextOutlined,
+	FundViewOutlined,
+	TransactionOutlined,
+	UserOutlined,
+} from '@ant-design/icons';
 import {Layout, Menu} from 'antd';
 import React, {useState} from 'react';
-import {Link, useLocation, useNavigate} from 'react-router-dom';
-import {getUserSelector} from '../redux/selectors';
 import {useSelector} from 'react-redux';
-import {Header} from '../components/Header/Header';
-import {DashboardOutlined, DisconnectOutlined, EditOutlined, FileTextOutlined, FundViewOutlined, UserOutlined} from '@ant-design/icons';
+import {Link, useLocation, useNavigate} from 'react-router-dom';
 import {imageExporter} from '../assets/images';
-import LoginPage from '../pages/LoginPage/LoginPage';
-import SignUpPage from '../pages/SignUpPage/SignUp';
+import {Header} from '../components/Header/Header';
+import {getUserSelector} from '../redux/selectors';
 
 const {Footer, Sider, Content} = Layout;
 
@@ -35,6 +41,7 @@ export const DefaultLayout = ({children}) => {
 		'/reports',
 		'/ads',
 		'/posts',
+		'/transactions',
 		//add more pages here
 	];
 
@@ -43,9 +50,10 @@ export const DefaultLayout = ({children}) => {
 		getItem('Dashboard', '/dashboard', <DashboardOutlined />),
 		getItem('User', '/users', <UserOutlined />),
 		getItem('Bet', '/bets', <DisconnectOutlined />),
-		getItem('Report', '/reports', <FileTextOutlined /> ),
-		getItem('Advertisement', '/ads', <FundViewOutlined /> ),
-		getItem('Post', '/posts', <EditOutlined />)
+		getItem('Report', '/reports', <FileTextOutlined />),
+		getItem('Advertisement', '/ads', <FundViewOutlined />),
+		getItem('Post', '/posts', <EditOutlined />),
+		getItem('Transaction', '/transactions', <TransactionOutlined />),
 
 		//add more items here
 	];
