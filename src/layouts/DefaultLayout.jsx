@@ -4,7 +4,7 @@ import {Link, useLocation, useNavigate} from 'react-router-dom';
 import {getUserSelector} from '../redux/selectors';
 import {useSelector} from 'react-redux';
 import {Header} from '../components/Header/Header';
-import {DashboardOutlined, DisconnectOutlined, UserOutlined} from '@ant-design/icons';
+import {DashboardOutlined, DisconnectOutlined, EditOutlined, FileTextOutlined, FundViewOutlined, UserOutlined} from '@ant-design/icons';
 import {imageExporter} from '../assets/images';
 import LoginPage from '../pages/LoginPage/LoginPage';
 import SignUpPage from '../pages/SignUpPage/SignUp';
@@ -32,6 +32,9 @@ export const DefaultLayout = ({children}) => {
 		'/dashboard',
 		'/users',
 		'/bets',
+		'/reports',
+		'/ads',
+		'/posts',
 		//add more pages here
 	];
 
@@ -40,6 +43,10 @@ export const DefaultLayout = ({children}) => {
 		getItem('Dashboard', '/dashboard', <DashboardOutlined />),
 		getItem('User', '/users', <UserOutlined />),
 		getItem('Bet', '/bets', <DisconnectOutlined />),
+		getItem('Report', '/reports', <FileTextOutlined /> ),
+		getItem('Advertisement', '/ads', <FundViewOutlined /> ),
+		getItem('Post', '/posts', <EditOutlined />)
+
 		//add more items here
 	];
 
