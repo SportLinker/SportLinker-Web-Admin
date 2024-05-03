@@ -131,7 +131,7 @@ export const AdPage = () => {
         { label: 'Expires At', name: 'expiresAt' },
         { label: 'User Join', name: 'userJoin' },
         { label: 'Ad Name', name: 'adName' },
-        { label: 'Status', name: 'status' },
+        {label: 'Status', name: 'status', type: 'Status', options: ['Success', 'Fail', 'Cancel']},
         // Add more fields as needed
     ];
 

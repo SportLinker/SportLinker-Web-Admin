@@ -123,11 +123,12 @@ export const ReportPage = () => {
         { label: 'User', name: 'user' },
         { label: 'Reported User', name: 'reportedUser' },
         { label: 'Title', name: 'title' },
-        { label: 'Description', name: 'description' },
-        { label: 'Time', name: 'time' },
-        { label: 'Status', name: 'status' },
+        { label: 'Description', name: 'description',type:'TextArea' },
+        { label: 'Time', name: 'time', type: 'Date' }, // Modify this line
+        { label: 'Status', name: 'status', type: 'Status', options: ['Pending', 'In Progress', 'Completed'] }, // Modify this line
         // Add more fields as needed
     ];
+    
 
     const handleSearch = (values) => {
         // Handle search logic here
