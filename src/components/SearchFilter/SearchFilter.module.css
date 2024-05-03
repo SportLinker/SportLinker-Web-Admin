@@ -1,40 +1,38 @@
-.filterButton {
-	margin-right: 8px;
-}
-
-.filterModal {
-	width: 400px;
-}
-
-.inputField {
-	width: 100%;
-}
-
-.applyButton {
-	width: 30%;
-	margin-top: 16px;
-}
-
-.buttonContainer {
-	text-align: right;
-	margin-top: 16px;
-}
 .searchFilterContainer {
-	display: flex;
-	align-items: center;
+  display: flex;
+  align-items: center;
+  padding:0 1rem;
 }
 
 .searchInput {
-	margin: 0 10px;
-	width: 300px;
+  margin-right: 10px;
+  width: 300px;
 }
 
-.checkboxItem {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
+.filterButton {
+  margin-right: 10px;
 }
 
-.checkbox {
-	order: 2; /* Change the order of the checkbox to appear on the right */
+.filterModal {
+  width: 400px;
+}
+
+.formFields {
+  display: flex;
+  flex-wrap: wrap;
+  margin: -8px; /* Add negative margin to counteract Space padding */
+}
+
+.fieldContainer {
+  flex: 1 1 calc(50% - 16px); /* Adjust field container width for two columns */
+  margin: 8px; /* Add margin to Space component */
+}
+
+.applyButton {
+  width: 100%;
+  margin-top: 16px;
+}
+
+.buttonContainer {
+  text-align: right;
 }
