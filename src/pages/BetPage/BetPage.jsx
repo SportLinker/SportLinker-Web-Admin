@@ -128,6 +128,9 @@ export const BetPage = () => {
 	const [deleteModalVisible, setDeleteModalVisible] = useState(false);
 	const [selectedBet, setSelectedBet] = useState(null);
 	const [isEditMode, setIsEditMode] = useState(false);
+	const [filteredDataSource, setFilteredDataSource] = useState(dataSource);
+
+	console.log('filteredDataSource', filteredDataSource);
 
 	const fields = [
 		{label: 'Bet Name', name: 'betName'},
@@ -135,9 +138,19 @@ export const BetPage = () => {
 		// Add more fields as needed
 	];
 
-	const handleSearch = (values) => {
-		// Handle search logic here
-		console.log('Search values:', values);
+	const handleSearch = (key, selectedFilters) => {
+		const filteredData = dataSource.filter((item) => {
+			const matchKey = Object.values(item).some((value) =>
+				value.toString().toLowerCase().includes(key.toLowerCase())
+			);
+			const matchFilters = selectedFilters.every(
+				(filter) =>
+					item[filter] &&
+					item[filter].toString().toLowerCase().includes(key.toLowerCase())
+			);
+			return matchKey && matchFilters;
+		});
+		setFilteredDataSource(filteredData);
 	};
 
 	const handleCreateBet = () => {
@@ -204,7 +217,11 @@ export const BetPage = () => {
 				</Button>
 			</div>
 			<div>
-				<Table dataSource={dataSource} rowKey="key" pagination={{pageSize: 5}}>
+				<Table
+					dataSource={filteredDataSource || dataSource}
+					rowKey="key"
+					pagination={{pageSize: 5}}
+				>
 					<Column title="Bet Name" dataIndex="betName" key="betName" />
 					<Column title="CLB" dataIndex="clb" key="clb" />
 					<Column title="Create by" dataIndex="createBy" key="createBy" />

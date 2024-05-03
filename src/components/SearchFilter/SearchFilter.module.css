@@ -1,23 +1,40 @@
-/* Update CSS for SearchFilter component */
 .filterButton {
 	margin-right: 8px;
-  }
-  
-  .filterModal {
+}
+
+.filterModal {
 	width: 400px;
-  }
-  
-  .inputField {
-	width: 100%; /* Adjusted width for better responsiveness */
-  }
-  
-  .applyButton {
+}
+
+.inputField {
+	width: 100%;
+}
+
+.applyButton {
 	width: 30%;
 	margin-top: 16px;
-  }
-  /* Update CSS for SearchFilter component */
+}
+
 .buttonContainer {
 	text-align: right;
-	margin-top: 16px; /* Adjust margin-top as needed */
-  }
-  
+	margin-top: 16px;
+}
+.searchFilterContainer {
+	display: flex;
+	align-items: center;
+}
+
+.searchInput {
+	margin: 0 10px;
+	width: 300px;
+}
+
+.checkboxItem {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.checkbox {
+	order: 2; /* Change the order of the checkbox to appear on the right */
+}
