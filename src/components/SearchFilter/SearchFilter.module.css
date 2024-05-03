@@ -1,16 +1,23 @@
+/* Update CSS for SearchFilter component */
 .filterButton {
 	margin-right: 8px;
-}
-
-.filterModal {
+  }
+  
+  .filterModal {
 	width: 400px;
-}
-
-.inputField {
-	width: 255%;
-}
-
-.applyButton {
-	width: 100%;
+  }
+  
+  .inputField {
+	width: 100%; /* Adjusted width for better responsiveness */
+  }
+  
+  .applyButton {
+	width: 30%;
 	margin-top: 16px;
-}
+  }
+  /* Update CSS for SearchFilter component */
+.buttonContainer {
+	text-align: right;
+	margin-top: 16px; /* Adjust margin-top as needed */
+  }
+  
