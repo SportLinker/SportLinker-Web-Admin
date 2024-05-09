@@ -8,9 +8,10 @@ import {UserPage} from '../pages/UserPage/UserPage';
 import LoginPage from '../pages/LoginPage/LoginPage';
 import SignUpPage from '../pages/SignUpPage/SignUp';
 import {BetPage} from '../pages/BetPage/BetPage';
-import { ReportPage } from '../pages/ReportPage/ReportPage';
+import {ReportPage} from '../pages/ReportPage/ReportPage';
 import AdPage from '../pages/AdPage/AdPage';
 import PostPage from '../pages/PostPage/PostPage';
+import TransactionPage from '../pages/TransactionPage/TransactionPage';
 
 export const AppRouters = () => {
 	return (
@@ -25,6 +26,7 @@ export const AppRouters = () => {
 				<Route path="/ads" element={<AdPage />}></Route>
 				<Route path="/reports" element={<ReportPage />}></Route>
 				<Route path="/posts" element={<PostPage />}></Route>
+				<Route path="/transactions" element={<TransactionPage />}></Route>
 
 				<Route path="/permission-denied" element={<PermissionDeniedPage />}></Route>
 				<Route path="*" element={<NotFoundPage />} />
