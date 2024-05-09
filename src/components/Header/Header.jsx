@@ -2,7 +2,7 @@ import React from 'react';
 
 export const Header = () => {
 	return (
-		<div style={{display: 'flex', textAlign: 'center', width: '98%', margin: '0 auto'}}>
+		<div style={{display: 'flex', textAlign: 'center', width: '98%', margin: 'auto'}}>
 			<div
 				style={{
 					width: '100%',
