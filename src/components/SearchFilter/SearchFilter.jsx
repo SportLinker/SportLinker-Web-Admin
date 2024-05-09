@@ -55,7 +55,7 @@ const SearchFilter = ({ fields, onSearch, initialValues = {}, searchPlaceholder 
                     </Checkbox.Group>
                 );
             case 'TextArea':
-                return <Input.TextArea rows={2} placeholder={field.label} />;
+                return <Input.TextArea rows={3} placeholder={field.label} />;
             default:
                 return <Input placeholder={field.label} />;
         }
