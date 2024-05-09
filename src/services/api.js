@@ -2,6 +2,7 @@ import axios from 'axios';
 import {toast} from 'react-toastify';
 
 const API = 'http://localhost:8080/v1/api';
+const API_URL = 'https://6531f3964d4c2e3f333d6d0e.mockapi.io/';
 // let accessToken =
 // 	localStorage.getItem('user') && JSON.parse(localStorage.getItem('user')).accessToken;
 // let refreshToken =
