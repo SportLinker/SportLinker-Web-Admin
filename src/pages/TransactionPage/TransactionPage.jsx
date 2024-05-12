@@ -55,7 +55,7 @@ const TransactionPage = () => {
             <div className={styles.createBtn}>
                 {/* Button for creating a report */}
             </div>
-            <Table dataSource={dummyData} rowKey="key">
+            <Table dataSource={dummyData} rowKey="key" pagination={{pageSize: 5}}>
                 <Column
                     title="Create Day"
                     dataIndex="created_at"
