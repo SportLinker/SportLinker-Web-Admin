@@ -1,7 +1,7 @@
 import React from 'react';
 import {DefaultLayout} from '../layouts/DefaultLayout';
 import {Navigate, Route, Routes} from 'react-router-dom';
-import {DashboardPage} from '../pages/DashboardPage/DashboardPage';
+import DashboardPage from '../pages/DashboardPage/DashboardPage';
 import {NotFoundPage} from '../pages/NotFoundPage/NotFoundPage';
 import PermissionDeniedPage from '../pages/PermissionDeniedPage/PermissionDeniedPage';
 import {UserPage} from '../pages/UserPage/UserPage';
