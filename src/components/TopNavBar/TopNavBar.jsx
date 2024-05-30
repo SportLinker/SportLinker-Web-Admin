@@ -72,7 +72,7 @@ const TopNavbar = () => {
 						onClick={handleProfileClick}
 					/>
 					<div className={styles.userInfo}>
-						<span className={styles.userName}>John Doe</span>
+						<span className={styles.userName}>Dang Ninh</span>
 						<span className={styles.userRole}>Admin</span>
 					</div>
 					{showSignOutButton && (
@@ -89,7 +89,7 @@ const TopNavbar = () => {
 							<span className={styles.signOutText}>
 								Are you sure you want to sign out?
 							</span>
-							<div >
+							<div>
 								<button
 									className={styles.confirmButton}
 									onClick={handleConfirmSignOut}
