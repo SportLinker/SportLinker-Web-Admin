@@ -3,6 +3,7 @@ import moment from 'moment';
 import React, {useState} from 'react';
 import styles from './PostPage.module.css';
 import SearchFilter from '../../components/SearchFilter/SearchFilter';
+import {Helmet} from 'react-helmet';
 
 const {Column} = Table;
 const {Item} = Form;
@@ -217,111 +218,116 @@ export const PostPage = () => {
 	};
 
 	return (
-		<div className={styles.postContainer}>
-			<div className={styles.postTitle}>
-				<h1>Manage Posts</h1>
-			</div>
-			<SearchFilter fields={fields} onSearch={handleSearch} />
-			<div className={styles.createBtn}>
-				<Button type="primary" onClick={handleCreatePost}>
-					Create Post
-				</Button>
-			</div>
-			<div>
-				<Table dataSource={dataSource} rowKey="key" pagination={{pageSize: 5}}>
-					<Column title="By User" dataIndex="byUser" key="byUser" />
-					<Column title="Title" dataIndex="title" key="title" />
-					<Column
-						title="Content"
-						dataIndex="content"
-						key="content"
-						ellipsis={{showTitle: false}}
-						render={(text) => (
-							<Tooltip placement="topLeft" title={text}>
-								{text}
-							</Tooltip>
-						)}
-					/>
-					<Column
-						title="Img Url"
-						dataIndex="imgUrl"
-						key="imgUrl"
-						ellipsis={{showTitle: false}}
-						render={(text) => (
-							<Tooltip placement="topLeft" title={text}>
-								<a href={text} target="_blank" rel="noopener noreferrer">
+		<>
+			<Helmet>
+				<title>Manage Post</title>
+			</Helmet>
+			<div className={styles.postContainer}>
+				<div className={styles.postTitle}>
+					<h1>Manage Posts</h1>
+				</div>
+				<SearchFilter fields={fields} onSearch={handleSearch} />
+				<div className={styles.createBtn}>
+					<Button type="primary" onClick={handleCreatePost}>
+						Create Post
+					</Button>
+				</div>
+				<div>
+					<Table dataSource={dataSource} rowKey="key" pagination={{pageSize: 5}}>
+						<Column title="By User" dataIndex="byUser" key="byUser" />
+						<Column title="Title" dataIndex="title" key="title" />
+						<Column
+							title="Content"
+							dataIndex="content"
+							key="content"
+							ellipsis={{showTitle: false}}
+							render={(text) => (
+								<Tooltip placement="topLeft" title={text}>
 									{text}
-								</a>
-							</Tooltip>
-						)}
-					/>
-					<Column
-						title="Video Url"
-						dataIndex="videoUrl"
-						key="videoUrl"
-						ellipsis={{showTitle: false}}
-						render={(text) => (
-							<Tooltip placement="topLeft" title={text}>
-								<a href={text} target="_blank" rel="noopener noreferrer">
-									{text}
-								</a>
-							</Tooltip>
-						)}
-					/>
+								</Tooltip>
+							)}
+						/>
+						<Column
+							title="Img Url"
+							dataIndex="imgUrl"
+							key="imgUrl"
+							ellipsis={{showTitle: false}}
+							render={(text) => (
+								<Tooltip placement="topLeft" title={text}>
+									<a href={text} target="_blank" rel="noopener noreferrer">
+										{text}
+									</a>
+								</Tooltip>
+							)}
+						/>
+						<Column
+							title="Video Url"
+							dataIndex="videoUrl"
+							key="videoUrl"
+							ellipsis={{showTitle: false}}
+							render={(text) => (
+								<Tooltip placement="topLeft" title={text}>
+									<a href={text} target="_blank" rel="noopener noreferrer">
+										{text}
+									</a>
+								</Tooltip>
+							)}
+						/>
 
-					<Column title="Created At" dataIndex="createdAt" key="createdAt" />
-					<Column
-						title="Tags"
-						dataIndex="tags"
-						key="tags"
-						ellipsis={{showTitle: false}}
-						render={(tags) => (
-							<span>
-								{tags.map((tag) => (
-									<Tag key={tag}>{tag}</Tag>
-								))}
-							</span>
-						)}
-					/>
-					<Column
-						title="Status"
-						dataIndex="status"
-						key="status"
-						render={(status) => (
-							<Tag
-								color={
-									status === 'Success'
-										? 'green'
-										: status === 'Fail'
-											? 'red'
-											: 'orange'
-								}
-							>
-								{status}
-							</Tag>
-						)}
-					/>
-					<Column
-						title="Action"
-						key="action"
-						render={(text, record) => (
-							<span>
-								<Button type="primary" style={{marginRight: 10}}>
-									<Tooltip title="Edit">Edit</Tooltip>
-								</Button>
-								<Button
-									type="danger"
-									style={{backgroundColor: '#ff0000', color: 'white'}}
+						<Column title="Created At" dataIndex="createdAt" key="createdAt" />
+						<Column
+							title="Tags"
+							dataIndex="tags"
+							key="tags"
+							ellipsis={{showTitle: false}}
+							render={(tags) => (
+								<span>
+									{tags.map((tag) => (
+										<Tag key={tag}>{tag}</Tag>
+									))}
+								</span>
+							)}
+						/>
+						<Column
+							title="Status"
+							dataIndex="status"
+							key="status"
+							render={(status) => (
+								<Tag
+									color={
+										status === 'Success'
+											? 'green'
+											: status === 'Fail'
+												? 'red'
+												: 'orange'
+									}
 								>
-									<Tooltip title="Delete">Delete</Tooltip>
-								</Button>
-							</span>
-						)}
-					/>
-				</Table>
-				{/* Modals for Create and Delete */}
+									{status}
+								</Tag>
+							)}
+						/>
+						<Column
+							title="Action"
+							key="action"
+							render={(text, record) => (
+								<span>
+									<Button type="primary" style={{marginRight: 10}}>
+										<Tooltip title="Edit">Edit</Tooltip>
+									</Button>
+									<Button
+										type="danger"
+										style={{backgroundColor: '#ff0000', color: 'white'}}
+									>
+										<Tooltip title="Delete">Delete</Tooltip>
+									</Button>
+								</span>
+							)}
+						/>
+					</Table>
+					{/* Modals for Create and Delete */}
+				</div>
 			</div>
-		</div>
+		</>
 	);
 };
 
