@@ -15,6 +15,7 @@ import moment from 'moment';
 import React, {useState} from 'react';
 import styles from './BetPage.module.css';
 import SearchFilter from '../../components/SearchFilter/SearchFilter';
+import {Helmet} from 'react-helmet';
 
 const {Column} = Table;
 const {Item} = Form;
@@ -206,164 +207,171 @@ export const BetPage = () => {
 	};
 
 	return (
-		<div className={styles.betContainer}>
-			<div className={styles.betTitle}>
-				<h1>Manage Bet</h1>
-			</div>
-			<SearchFilter fields={fields} onSearch={handleSearch} />
-			<div className={styles.createBtn}>
-				<Button type="primary" onClick={handleCreateBet}>
-					Create Bet
-				</Button>
-			</div>
-			<div>
-				<Table
-					dataSource={filteredDataSource || dataSource}
-					rowKey="key"
-					pagination={{pageSize: 5}}
-				>
-					<Column title="Bet Name" dataIndex="betName" key="betName" />
-					<Column title="CLB" dataIndex="clb" key="clb" />
-					<Column title="Create by" dataIndex="createBy" key="createBy" />
-					<Column
-						title="Organization Day"
-						dataIndex="organizationDay"
-						key="organizationDay"
-						render={(organizationDay) => moment(organizationDay).format('MM-DD-YYYY')}
-					/>
-					<Column
-						title="Organization Time"
-						dataIndex="organizationTime"
-						key="organizationTime"
-					/>
-					<Column
-						title="Status"
-						dataIndex="status"
-						key="status"
-						align="center"
-						render={(role) => (
-							<Tag
-								style={{textAlign: 'center'}}
-								color={
-									role === 'Sắp diễn ra'
-										? '#ab741a'
-										: role === 'Đang diễn ra'
-											? '#37297a'
-											: ''
-								}
+		<>
+			<Helmet>
+				<title>Manage Match</title>
+			</Helmet>
+			<div className={styles.betContainer}>
+				<div className={styles.betTitle}>
+					<h1>Manage Bet</h1>
+				</div>
+				<SearchFilter fields={fields} onSearch={handleSearch} />
+				<div className={styles.createBtn}>
+					<Button type="primary" onClick={handleCreateBet}>
+						Create Match
+					</Button>
+				</div>
+				<div>
+					<Table
+						dataSource={filteredDataSource || dataSource}
+						rowKey="key"
+						pagination={{pageSize: 5}}
+					>
+						<Column title="Bet Name" dataIndex="betName" key="betName" />
+						<Column title="CLB" dataIndex="clb" key="clb" />
+						<Column title="Create by" dataIndex="createBy" key="createBy" />
+						<Column
+							title="Organization Day"
+							dataIndex="organizationDay"
+							key="organizationDay"
+							render={(organizationDay) =>
+								moment(organizationDay).format('MM-DD-YYYY')
+							}
+						/>
+						<Column
+							title="Organization Time"
+							dataIndex="organizationTime"
+							key="organizationTime"
+						/>
+						<Column
+							title="Status"
+							dataIndex="status"
+							key="status"
+							align="center"
+							render={(role) => (
+								<Tag
+									style={{textAlign: 'center'}}
+									color={
+										role === 'Sắp diễn ra'
+											? '#ab741a'
+											: role === 'Đang diễn ra'
+												? '#37297a'
+												: ''
+									}
+								>
+									{typeof role === 'string'
+										? role.charAt(0).toUpperCase() + role.slice(1)
+										: ''}
+								</Tag>
+							)}
+						/>
+						<Column title="Location" dataIndex="location" key="location" />
+						<Column
+							title="Action"
+							key="action"
+							render={(text, record) => (
+								<span>
+									<Button
+										type="primary"
+										style={{marginRight: 10}}
+										onClick={() => handleEdit(record)}
+									>
+										<Tooltip title="Edit">
+											<EditFilled />
+										</Tooltip>
+									</Button>
+									<Button
+										type="danger"
+										style={{
+											marginRight: 10,
+											backgroundColor: '#ff0000',
+											color: 'white',
+										}}
+										onClick={() => handleDelete(record)}
+									>
+										<Tooltip title="Delete">
+											<DeleteFilled />
+										</Tooltip>
+									</Button>
+								</span>
+							)}
+						/>
+					</Table>
+					<Modal
+						title={'Create Bet'}
+						visible={modalVisible}
+						onOk={handleModalSuccess}
+						onCancel={handleModalCancel}
+					>
+						<Form form={form} layout="vertical" className={styles.formContainer}>
+							<Item
+								label="Bet Name"
+								name="betName"
+								rules={[{required: true, message: 'Bet Name is required'}]}
 							>
-								{typeof role === 'string'
-									? role.charAt(0).toUpperCase() + role.slice(1)
-									: ''}
-							</Tag>
-						)}
-					/>
-					<Column title="Location" dataIndex="location" key="location" />
-					<Column
-						title="Action"
-						key="action"
-						render={(text, record) => (
-							<span>
-								<Button
-									type="primary"
-									style={{marginRight: 10}}
-									onClick={() => handleEdit(record)}
-								>
-									<Tooltip title="Edit">
-										<EditFilled />
-									</Tooltip>
-								</Button>
-								<Button
-									type="danger"
-									style={{
-										marginRight: 10,
-										backgroundColor: '#ff0000',
-										color: 'white',
-									}}
-									onClick={() => handleDelete(record)}
-								>
-									<Tooltip title="Delete">
-										<DeleteFilled />
-									</Tooltip>
-								</Button>
-							</span>
-						)}
-					/>
-				</Table>
-				<Modal
-					title={'Create Bet'}
-					visible={modalVisible}
-					onOk={handleModalSuccess}
-					onCancel={handleModalCancel}
-				>
-					<Form form={form} layout="vertical" className={styles.formContainer}>
-						<Item
-							label="Bet Name"
-							name="betName"
-							rules={[{required: true, message: 'Bet Name is required'}]}
-						>
-							<Input />
-						</Item>
-						<Item
-							label="CLB"
-							name="clb"
-							rules={[{required: true, message: 'CLB is required'}]}
-						>
-							<Input />
-						</Item>
-						<Item
-							label="Create By"
-							name="createBy"
-							rules={[{required: true, message: 'Create By is required'}]}
-						>
-							<Input />
-						</Item>
-						<Item
-							label="Organization Day"
-							name="organizationDay"
-							rules={[{required: true, message: 'Organization Day is required'}]}
-						>
-							<DatePicker />
-						</Item>
-						<Item
-							label="Organization Time"
-							name="organizationTime"
-							rules={[{required: true, message: 'Organization Time is required'}]}
-						>
-							<TimePicker format="hh:mm A" />
-						</Item>
+								<Input />
+							</Item>
+							<Item
+								label="CLB"
+								name="clb"
+								rules={[{required: true, message: 'CLB is required'}]}
+							>
+								<Input />
+							</Item>
+							<Item
+								label="Create By"
+								name="createBy"
+								rules={[{required: true, message: 'Create By is required'}]}
+							>
+								<Input />
+							</Item>
+							<Item
+								label="Organization Day"
+								name="organizationDay"
+								rules={[{required: true, message: 'Organization Day is required'}]}
+							>
+								<DatePicker />
+							</Item>
+							<Item
+								label="Organization Time"
+								name="organizationTime"
+								rules={[{required: true, message: 'Organization Time is required'}]}
+							>
+								<TimePicker format="hh:mm A" />
+							</Item>
 
-						<Item
-							label="Status"
-							name="status"
-							rules={[{required: true, message: 'Status is required'}]}
-						>
-							<Select>
-								<Select.Option value="Sắp diễn ra">Sắp diễn ra</Select.Option>
-								<Select.Option value="Đang diễn ra" disabled={!isEditMode}>
-									Đang diễn ra
-								</Select.Option>
-							</Select>
-						</Item>
+							<Item
+								label="Status"
+								name="status"
+								rules={[{required: true, message: 'Status is required'}]}
+							>
+								<Select>
+									<Select.Option value="Sắp diễn ra">Sắp diễn ra</Select.Option>
+									<Select.Option value="Đang diễn ra" disabled={!isEditMode}>
+										Đang diễn ra
+									</Select.Option>
+								</Select>
+							</Item>
 
-						<Item
-							label="Location"
-							name="location"
-							rules={[{required: true, message: 'Location is required'}]}
-						>
-							<Input />
-						</Item>
-					</Form>
-				</Modal>
-				<Modal
-					title="Confirm Delete"
-					visible={deleteModalVisible}
-					onOk={handleDeleteConfirm}
-					onCancel={handleDeleteCancel}
-				>
-					<p>{`Are you sure you want to delete "${selectedBet ? selectedBet.betName : ''}"?`}</p>
-				</Modal>
+							<Item
+								label="Location"
+								name="location"
+								rules={[{required: true, message: 'Location is required'}]}
+							>
+								<Input />
+							</Item>
+						</Form>
+					</Modal>
+					<Modal
+						title="Confirm Delete"
+						visible={deleteModalVisible}
+						onOk={handleDeleteConfirm}
+						onCancel={handleDeleteCancel}
+					>
+						<p>{`Are you sure you want to delete "${selectedBet ? selectedBet.betName : ''}"?`}</p>
+					</Modal>
+				</div>
 			</div>
-		</div>
+		</>
 	);
 };

@@ -4,6 +4,7 @@ import moment from 'moment';
 import React, {useState} from 'react';
 import styles from './ReportPage.module.css';
 import SearchFilter from '../../components/SearchFilter/SearchFilter';
+import {Helmet} from 'react-helmet';
 
 const {Column} = Table;
 const {Item} = Form;
@@ -163,77 +164,82 @@ export const ReportPage = () => {
 	};
 
 	return (
-		<div className={styles.reportContainer}>
-			<div className={styles.reportTitle}>
-				<h1>Manage Reports</h1>
-			</div>
-			<SearchFilter fields={fields} onSearch={handleSearch} />
-			<div className={styles.createBtn}>
-				<Button type="primary" onClick={handleCreateReport}>
-					Create Report
-				</Button>
-			</div>
-			<div>
-				<Table dataSource={dataSource} rowKey="key" pagination={{pageSize: 5}}>
-					<Column title="User" dataIndex="user" key="user" />
-					<Column title="Reported User" dataIndex="reportedUser" key="reportedUser" />
-					<Column title="Title" dataIndex="title" key="title" />
-					<Column
-						title="Description"
-						dataIndex="description"
-						key="description"
-						ellipsis={{showTitle: false}}
-						render={(text) => (
-							<Tooltip placement="topLeft" title={text}>
-								{text}
-							</Tooltip>
-						)}
-					/>
+		<>
+			<Helmet>
+				<title>Manage Reports</title>
+			</Helmet>
+			<div className={styles.reportContainer}>
+				<div className={styles.reportTitle}>
+					<h1>Manage Reports</h1>
+				</div>
+				<SearchFilter fields={fields} onSearch={handleSearch} />
+				<div className={styles.createBtn}>
+					<Button type="primary" onClick={handleCreateReport}>
+						Create Report
+					</Button>
+				</div>
+				<div>
+					<Table dataSource={dataSource} rowKey="key" pagination={{pageSize: 5}}>
+						<Column title="User" dataIndex="user" key="user" />
+						<Column title="Reported User" dataIndex="reportedUser" key="reportedUser" />
+						<Column title="Title" dataIndex="title" key="title" />
+						<Column
+							title="Description"
+							dataIndex="description"
+							key="description"
+							ellipsis={{showTitle: false}}
+							render={(text) => (
+								<Tooltip placement="topLeft" title={text}>
+									{text}
+								</Tooltip>
+							)}
+						/>
 
-					<Column title="Time" dataIndex="time" key="time" />
-					<Column
-						title="Status"
-						dataIndex="status"
-						key="status"
-						render={(status) => (
-							<Tag
-								color={
-									status === 'Pending'
-										? 'orange'
-										: status === 'In Progress'
-											? 'blue'
-											: 'green'
-								}
-							>
-								{status}
-							</Tag>
-						)}
-					/>
-					<Column
-						title="Action"
-						key="action"
-						render={(text, record) => (
-							<span>
-								<Button type="primary" style={{marginRight: 10}}>
-									<Tooltip title="Edit">
-										<EditFilled />
-									</Tooltip>
-								</Button>
-								<Button
-									type="danger"
-									style={{backgroundColor: '#ff0000', color: 'white'}}
+						<Column title="Time" dataIndex="time" key="time" />
+						<Column
+							title="Status"
+							dataIndex="status"
+							key="status"
+							render={(status) => (
+								<Tag
+									color={
+										status === 'Pending'
+											? 'orange'
+											: status === 'In Progress'
+												? 'blue'
+												: 'green'
+									}
 								>
-									<Tooltip title="Delete">
-										<DeleteFilled />
-									</Tooltip>
-								</Button>
-							</span>
-						)}
-					/>
-				</Table>
-				{/* Modals for Create and Delete */}
+									{status}
+								</Tag>
+							)}
+						/>
+						<Column
+							title="Action"
+							key="action"
+							render={(text, record) => (
+								<span>
+									<Button type="primary" style={{marginRight: 10}}>
+										<Tooltip title="Edit">
+											<EditFilled />
+										</Tooltip>
+									</Button>
+									<Button
+										type="danger"
+										style={{backgroundColor: '#ff0000', color: 'white'}}
+									>
+										<Tooltip title="Delete">
+											<DeleteFilled />
+										</Tooltip>
+									</Button>
+								</span>
+							)}
+						/>
+					</Table>
+					{/* Modals for Create and Delete */}
+				</div>
 			</div>
-		</div>
+		</>
 	);
 };
 
