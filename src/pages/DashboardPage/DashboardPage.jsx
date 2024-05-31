@@ -32,7 +32,7 @@ const DashboardPage = () => (
 			<Container maxWidth="xl">
 				<Stack spacing={3}>
 					<div>
-						<Typography variant="h4">Reports</Typography>
+						<Typography variant="h4">Dashboard Reports</Typography>
 					</div>
 					<div>
 						<Grid container spacing={3}>
@@ -52,7 +52,7 @@ const DashboardPage = () => (
 											</SvgIcon>
 										</Avatar>
 									}
-									label="Orders"
+									label="Register recently"
 									value="5610"
 								/>
 							</Grid>

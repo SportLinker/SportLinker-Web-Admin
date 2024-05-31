@@ -22,7 +22,7 @@ export const AppRouters = () => {
 				<Route path="/users" element={<UserPage />}></Route>
 				<Route path="/login" element={<LoginPage />}></Route>
 				<Route path="/signup" element={<SignUpPage />}></Route>
-				<Route path="/bets" element={<BetPage />}></Route>
+				<Route path="/matches" element={<BetPage />}></Route>
 				<Route path="/ads" element={<AdPage />}></Route>
 				<Route path="/reports" element={<ReportPage />}></Route>
 				<Route path="/posts" element={<PostPage />}></Route>
