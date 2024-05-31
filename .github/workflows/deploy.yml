@@ -17,16 +17,16 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: "16"
-          cache: "npm" # Thêm cache để tăng tốc độ build
+          cache: "npm"
 
       - name: 🔨 Install Dependencies
-        run: npm ci # Sử dụng `npm ci` để cài đặt nhanh và chính xác
+        run: npm ci
 
       - name: 🔨 Build Project
-        run: CI=false npm run build
+        run: npm run build # Vite uses `npm run build` by default
 
       - name: Update Browserslist (Optional)
-        run: npx browserslist@latest --update-db # Cập nhật nếu cần
+        run: npx browserslist@latest --update-db
 
       - name: 📂 Sync files
         uses: SamKirkland/FTP-Deploy-Action@4.0.0
@@ -34,3 +34,4 @@ jobs:
           server: ${{ secrets.GIT_CPANEL_REACT_SERVER }}
           username: ${{ secrets.GIT_CPANEL_REACT_USER }}
           password: ${{ secrets.GIT_CPANEL_REACT_PWD }}
+          local-dir: dist # Vite outputs the build to the `dist` directory by default
