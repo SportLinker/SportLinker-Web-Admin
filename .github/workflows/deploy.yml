@@ -1,0 +1,37 @@
+name: 🚀 Deploy website on push
+
+on:
+    push:
+        branches:
+            - main
+
+jobs:
+    web-deploy:
+        name: 🎉 Deploy
+        runs-on: ubuntu-latest
+        steps:
+            - name: 🚚 Get latest code
+              uses: actions/checkout@v3
+
+            - name: Use Node.js 16
+              uses: actions/setup-node@v2
+              with:
+                  node-version: '16'
+                  cache: 'npm'
+
+            - name: 🔨 Install Dependencies
+              run: npm ci
+
+            - name: 🔨 Build Project
+              run: npm run build # Vite uses `npm run build` by default
+
+            - name: Update Browserslist (Optional)
+              run: npx browserslist@latest --update-db
+
+            - name: 📂 Sync files
+              uses: SamKirkland/FTP-Deploy-Action@4.0.0
+              with:
+                  server: ${{ secrets.GIT_CPANEL_REACT_SERVER }}
+                  username: ${{ secrets.GIT_CPANEL_REACT_USER }}
+                  password: ${{ secrets.GIT_CPANEL_REACT_PWD }}
+                  local-dir: dist/ # Vite outputs the build to the `dist` directory by default

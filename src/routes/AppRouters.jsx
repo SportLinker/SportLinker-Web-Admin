@@ -1,7 +1,7 @@
 import React from 'react';
 import {DefaultLayout} from '../layouts/DefaultLayout';
 import {Navigate, Route, Routes} from 'react-router-dom';
-import {DashboardPage} from '../pages/DashboardPage/DashboardPage';
+import DashboardPage from '../pages/DashboardPage/DashboardPage';
 import {NotFoundPage} from '../pages/NotFoundPage/NotFoundPage';
 import PermissionDeniedPage from '../pages/PermissionDeniedPage/PermissionDeniedPage';
 import {UserPage} from '../pages/UserPage/UserPage';
@@ -12,23 +12,72 @@ import {ReportPage} from '../pages/ReportPage/ReportPage';
 import AdPage from '../pages/AdPage/AdPage';
 import PostPage from '../pages/PostPage/PostPage';
 import TransactionPage from '../pages/TransactionPage/TransactionPage';
+import PrivateRoute from './PrivateRoute';
 
 export const AppRouters = () => {
 	return (
 		<DefaultLayout>
 			<Routes>
-				<Route path="/" element={<Navigate to="/dashboard" />}></Route>
-				<Route path="/dashboard" element={<DashboardPage />}></Route>
-				<Route path="/users" element={<UserPage />}></Route>
-				<Route path="/login" element={<LoginPage />}></Route>
-				<Route path="/signup" element={<SignUpPage />}></Route>
-				<Route path="/bets" element={<BetPage />}></Route>
-				<Route path="/ads" element={<AdPage />}></Route>
-				<Route path="/reports" element={<ReportPage />}></Route>
-				<Route path="/posts" element={<PostPage />}></Route>
-				<Route path="/transactions" element={<TransactionPage />}></Route>
-
-				<Route path="/permission-denied" element={<PermissionDeniedPage />}></Route>
+				<Route path="/" element={<Navigate to="/dashboard" />} />
+				<Route
+					path="/dashboard"
+					element={
+						<PrivateRoute>
+							<DashboardPage />
+						</PrivateRoute>
+					}
+				/>
+				<Route
+					path="/users"
+					element={
+						<PrivateRoute>
+							<UserPage />
+						</PrivateRoute>
+					}
+				/>
+				<Route path="/login" element={<LoginPage />} />
+				<Route path="/signup" element={<SignUpPage />} />
+				<Route
+					path="/matches"
+					element={
+						<PrivateRoute>
+							<BetPage />
+						</PrivateRoute>
+					}
+				/>
+				<Route
+					path="/ads"
+					element={
+						<PrivateRoute>
+							<AdPage />
+						</PrivateRoute>
+					}
+				/>
+				<Route
+					path="/reports"
+					element={
+						<PrivateRoute>
+							<ReportPage />
+						</PrivateRoute>
+					}
+				/>
+				<Route
+					path="/posts"
+					element={
+						<PrivateRoute>
+							<PostPage />
+						</PrivateRoute>
+					}
+				/>
+				<Route
+					path="/transactions"
+					element={
+						<PrivateRoute>
+							<TransactionPage />
+						</PrivateRoute>
+					}
+				/>
+				<Route path="/permission-denied" element={<PermissionDeniedPage />} />
 				<Route path="*" element={<NotFoundPage />} />
 			</Routes>
 		</DefaultLayout>

@@ -21,7 +21,7 @@ export const userSlice = createSlice({
 	initialState: {
 		userInfo: {
 			fullName: '',
-			role: 'admin',
+			role: '',
 			status: '',
 			gender: '',
 			email: '',
