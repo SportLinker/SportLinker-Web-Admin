@@ -50,7 +50,6 @@ const TransactionPage = () => {
 		},
 		// Add more fields as needed
 	];
-
 	return (
 		<>
 			<Helmet>
