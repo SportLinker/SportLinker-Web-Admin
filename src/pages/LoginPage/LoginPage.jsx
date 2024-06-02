@@ -18,28 +18,28 @@ const LoginPage = () => {
           <Form name="basic" onFinish={onFinish} className={styles.formContainer}>
             <Form.Item
               className={styles.formItem}
-              label="Email"
               name="email"
               rules={[{ required: true, message: 'Please input your email!' }]}
             >
-              <Input className={`${styles.inputField} ${styles.inputField1}`} />
+              <label className={styles.label}>Email</label>
+              <Input className={styles.inputField} placeholder="Enter your email" />
             </Form.Item>
 
             <Form.Item
               className={styles.formItem}
-              label="Password"
               name="password"
               rules={[{ required: true, message: 'Please input your password!' }]}
             >
-              <Input.Password className={styles.inputField} />
+              <label className={styles.label}>Password</label>
+              <Input.Password className={styles.inputField} placeholder="Enter your password" />
             </Form.Item>
 
             <div className={styles.formItemsContainer}>
-              <Form.Item name="remember">
+              <Form.Item name="remember" valuePropName="checked" noStyle>
                 <Checkbox className={styles.rememberCheckbox}>Remember password?</Checkbox>
               </Form.Item>
 
-              <Form.Item>
+              <Form.Item noStyle>
                 <a href="/signup" className={styles.forgotPassword}>
                   Forgot password?
                 </a>
@@ -60,7 +60,7 @@ const LoginPage = () => {
             width: '100%',
             maxHeight: '100%',
             objectPosition: 'center',
-            objectFit: 'cover',
+            objectFit: 'fill',
           }}
           src={imageExporter.background}
           alt="background"
