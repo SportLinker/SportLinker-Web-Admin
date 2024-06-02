@@ -4,8 +4,18 @@ import React, {useState, useRef, useEffect} from 'react';
 import styles from './TopNavBar.module.css'; // Import CSS module file for styling
 import {BellOutlined} from '@ant-design/icons'; // Import icon for notification bell
 import profileImage from './profileImage.jpg'; // Import a sample profile image for illustration
+import userLoginSlice from '../../redux/slices/userLoginSlice';
+import {useDispatch} from 'react-redux';
+import {message} from 'antd';
+import {useNavigate} from 'react-router-dom';
 
 const TopNavbar = () => {
+	const userLocal = JSON.parse(localStorage.getItem('user'));
+	const user = userLocal?.user;
+
+	const dispatch = useDispatch();
+	const navigate = useNavigate();
+
 	const [showNotification, setShowNotification] = useState(false);
 	const [showSignOutPopup, setShowSignOutPopup] = useState(false);
 	const [showSignOutButton, setShowSignOutButton] = useState(false);
@@ -48,8 +58,27 @@ const TopNavbar = () => {
 	};
 
 	const handleConfirmSignOut = () => {
-		// Perform sign-out logic
-		window.location.href = '/login'; // Redirect to the login page
+		localStorage.removeItem('user');
+		dispatch(
+			userLoginSlice.actions.logout({
+				userId: '',
+				userPhone: '',
+				name: '',
+				email: '',
+				password: '',
+				bio: '',
+				avatar_url: '',
+				gender: '',
+				date_of_birth: '',
+				role: '',
+				accessToken: '',
+				refreshToken: '',
+				last_active_time: null,
+				status: '',
+			})
+		);
+		message.success('Logout successful!');
+		navigate('/login');
 	};
 
 	return (
@@ -66,14 +95,14 @@ const TopNavbar = () => {
 				</div>
 				<div className={styles.profileContainer}>
 					<img
-						src={profileImage}
+						src={user?.avatar_url || profileImage}
 						alt="Profile"
 						className={styles.profileImage}
 						onClick={handleProfileClick}
 					/>
 					<div className={styles.userInfo}>
-						<span className={styles.userName}>Dang Ninh</span>
-						<span className={styles.userRole}>Admin</span>
+						<span className={styles.userName}>{user?.name}</span>
+						<span className={styles.userRole}>{user?.role}</span>
 					</div>
 					{showSignOutButton && (
 						<button

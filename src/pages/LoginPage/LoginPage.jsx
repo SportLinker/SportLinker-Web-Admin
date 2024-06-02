@@ -1,12 +1,46 @@
-import React from 'react';
-import {Form, Input, Button, Checkbox} from 'antd';
+import React, {useState} from 'react';
+import {Form, Input, Button, Checkbox, message} from 'antd';
 import {imageExporter} from '../../assets/images';
 import styles from './Login.module.css'; // Import CSS module file for styling
 import {Helmet} from 'react-helmet';
+import {useDispatch, useSelector} from 'react-redux';
+import {handleLogin} from '../../redux/slices/userLoginSlice';
+import {useNavigate} from 'react-router-dom';
+import {getUserLoginSelector} from '../../redux/selectors';
 
 const LoginPage = () => {
+	const [isLoading, setIsLoading] = useState(false);
+
+	const dispatch = useDispatch();
+	const navigate = useNavigate();
+
+	// const user = useSelector(getUserLoginSelector);
+	// console.log('user', user);
+
 	const onFinish = (values) => {
 		console.log('Received values:', values);
+		setIsLoading(true);
+
+		// Clear any previous user data in local storage
+		// localStorage.removeItem('user');
+
+		dispatch(handleLogin(values))
+			.then((response) => {
+				const user = response.payload.metadata.user;
+				if (user?.role === 'admin') {
+					setIsLoading(false);
+					navigate('/');
+					message.success('Login successful!');
+				} else {
+					setIsLoading(false);
+					message.error('You do not have permission to access this page!');
+				}
+			})
+			.catch((error) => {
+				setIsLoading(false);
+				console.log(error);
+				message.error('Incorect email or password!');
+			});
 	};
 
 	return (
@@ -23,11 +57,22 @@ const LoginPage = () => {
 						<Form name="basic" onFinish={onFinish} className={styles.formContainer}>
 							<Form.Item
 								className={styles.formItem}
-								label="Email"
-								name="email"
-								rules={[{required: true, message: 'Please input your email!'}]}
+								label="Phone"
+								name="phone"
+								rules={[
+									{required: true, message: 'Please input your phone!'},
+									{
+										pattern: /^0\d{9}$/,
+										message:
+											'Phone number must start with 0 and be exactly 10 digits!',
+									},
+								]}
 							>
-								<Input className={`${styles.inputField} ${styles.inputField1}`} />
+								<Input
+									className={`${styles.inputField} ${styles.inputField1}`}
+									type="tel"
+									maxLength={10}
+								/>
 							</Form.Item>
 
 							<Form.Item
@@ -55,6 +100,7 @@ const LoginPage = () => {
 
 							<Form.Item>
 								<Button
+									loading={isLoading}
 									type="primary"
 									htmlType="submit"
 									className={styles.loginButton}

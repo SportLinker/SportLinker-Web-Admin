@@ -32,11 +32,10 @@
 	justify-content: space-between;
 	align-items: center;
 	margin-bottom: 10px;
-	text-align: left !important;
 }
 
 .inputField1 {
-	margin-left: 24px;
+	margin-left: 20px;
 }
 
 .inputField {
