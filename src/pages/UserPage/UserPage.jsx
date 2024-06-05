@@ -17,15 +17,23 @@ export const UserPage = () => {
 	const [modalVisible, setModalVisible] = useState(false);
 	const [deleteModalVisible, setDeleteModalVisible] = useState(false);
 	const [selectedUser, setSelectedUser] = useState(null);
+	const [currentPage, setCurrentPage] = useState(1);
+	const [pageSize, setPageSize] = useState(10);
+	const [users, setUsers] = useState(null);
 
-	const users = useSelector(getAllUserSelector);
+	const allUser = useSelector(getAllUserSelector);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		dispatch(fetchUsers());
-	}, []);
+		dispatch(fetchUsers({currentPage, pageSize}));
+	}, [dispatch]);
 
+	useEffect(() => {
+		setUsers(allUser.list_user);
+	}, [allUser]);
+
+	console.log('allUser', allUser);
 	console.log('users', users);
 
 	const handleCreateUser = () => {
@@ -93,10 +101,10 @@ export const UserPage = () => {
 					</Button>
 				</div>
 				<div>
-					<Table dataSource={users} rowKey="key" pagination={{pageSize: 5}}>
-						<Column title="User" dataIndex="user" key="user" />
-						<Column title="Email" dataIndex="email" key="address" />
-						<Column title="Address" dataIndex="address" key="address" />
+					<Table dataSource={users} rowKey="id" pagination={{pageSize: 5}}>
+						<Column title="User" dataIndex="name" key="name" />
+						<Column title="Email" dataIndex="email" key="email" />
+						<Column title="Phone" dataIndex="phone" key="phone" />
 						<Column
 							title="Role"
 							dataIndex="role"
@@ -106,9 +114,9 @@ export const UserPage = () => {
 								<Tag
 									style={{textAlign: 'center'}}
 									color={
-										role === 'Người dùng'
+										role === 'player'
 											? '#ab741a'
-											: role === 'Shop'
+											: role === 'admin'
 												? '#37297a'
 												: role === 'hlv'
 													? '#f9a825'
@@ -125,16 +133,11 @@ export const UserPage = () => {
 						/>
 						<Column
 							title="Date of birth"
-							dataIndex="dob"
-							key="dob"
-							render={(dob) => dayjs(dob * 1000).format('YYYY-MM-DD')}
+							dataIndex="date_of_birth"
+							key="date_of_birth"
 						/>
-						<Column
-							title="Date join"
-							dataIndex="dateJoin"
-							key="dateJoin"
-							render={(dateJoin) => dayjs(dateJoin * 1000).format('YYYY-MM-DD')}
-						/>
+						<Column title="Gender" dataIndex="gender" key="gender" />
+						<Column title="Status" dataIndex="status" key="status" />
 
 						<Column
 							title="Action"

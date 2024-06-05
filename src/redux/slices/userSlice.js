@@ -1,33 +1,23 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
-import {api, api_mockoi} from '../../services/api';
+import {api} from '../../services/api';
 
 //fetch data function example
-export const fetchUsers = createAsyncThunk('users/fetchAll', async (_, {rejectWithValue}) => {
-	try {
-		const data = await fetchAllUsers();
-		return data;
-	} catch (error) {
-		return rejectWithValue(error.response.data);
+export const fetchUsers = createAsyncThunk(
+	'users/fetchAll',
+	async ({currentPage, pageSize}, {rejectWithValue}) => {
+		try {
+			let url = `/users?page_size=${pageSize}&page_number=${currentPage}`;
+			const response = await api.get(url);
+			return response.data.metadata;
+		} catch (error) {
+			return rejectWithValue(error.response.data);
+		}
 	}
-});
-
-const fetchAllUsers = async () => {
-	const response = await api.get('/users');
-	return response.data;
-};
+);
 
 export const userSlice = createSlice({
 	name: 'userSlice',
 	initialState: {
-		userInfo: {
-			fullName: '',
-			role: '',
-			status: '',
-			gender: '',
-			email: '',
-			phone: '',
-			userId: '',
-		},
 		users: null,
 		loading: false,
 		error: null,
