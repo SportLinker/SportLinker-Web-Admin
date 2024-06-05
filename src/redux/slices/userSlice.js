@@ -1,5 +1,5 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
-import {api_mockoi} from '../../services/api';
+import {api, api_mockoi} from '../../services/api';
 
 //fetch data function example
 export const fetchUsers = createAsyncThunk('users/fetchAll', async (_, {rejectWithValue}) => {
@@ -12,7 +12,7 @@ export const fetchUsers = createAsyncThunk('users/fetchAll', async (_, {rejectWi
 });
 
 const fetchAllUsers = async () => {
-	const response = await api_mockoi.get('/users');
+	const response = await api.get('/users');
 	return response.data;
 };
 

@@ -54,7 +54,12 @@ const LoginPage = () => {
 						<h1>Sign In</h1>
 					</div>
 					<div className={styles.loginForm}>
-						<Form name="basic" onFinish={onFinish} className={styles.formContainer}>
+						<Form
+							layout="vertical"
+							name="basic"
+							onFinish={onFinish}
+							className={styles.formContainer}
+						>
 							<Form.Item
 								className={styles.formItem}
 								label="Phone"
@@ -68,11 +73,7 @@ const LoginPage = () => {
 									},
 								]}
 							>
-								<Input
-									className={`${styles.inputField} ${styles.inputField1}`}
-									type="tel"
-									maxLength={10}
-								/>
+								<Input className={styles.inputField} type="tel" maxLength={10} />
 							</Form.Item>
 
 							<Form.Item
@@ -98,7 +99,7 @@ const LoginPage = () => {
 								</Form.Item>
 							</div>
 
-							<Form.Item>
+							<Form.Item className={styles.centerButton}>
 								<Button
 									loading={isLoading}
 									type="primary"
