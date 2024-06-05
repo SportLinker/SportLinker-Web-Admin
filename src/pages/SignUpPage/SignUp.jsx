@@ -1,6 +1,6 @@
 import React from 'react';
 import {Form, Input, Button, Checkbox} from 'antd';
-import styles from './SignUp.module.css'; // Import CSS module file for styling
+import styles from './SignUp.module.css';
 import {imageExporter} from '../../assets/images';
 import {Helmet} from 'react-helmet';
 
@@ -32,13 +32,13 @@ const SignUpPage = () => {
 						<h1>Sign Up</h1>
 					</div>
 					<div className={styles.signUpForm}>
-						<Form name="basic" onFinish={onFinish}>
+						<Form layout="vertical" name="basic" onFinish={onFinish}>
 							<Form.Item
 								label="First Name"
 								name="firstName"
 								rules={[{required: true, message: 'Please input your first name!'}]}
 							>
-								<Input className={styles.inputForm} style={{marginLeft: 50}} />
+								<Input className={styles.inputForm} />
 							</Form.Item>
 
 							<Form.Item
@@ -46,7 +46,7 @@ const SignUpPage = () => {
 								name="lastName"
 								rules={[{required: true, message: 'Please input your last name!'}]}
 							>
-								<Input className={styles.inputForm} style={{marginLeft: 47}} />
+								<Input className={styles.inputForm} />
 							</Form.Item>
 
 							<Form.Item
@@ -60,7 +60,7 @@ const SignUpPage = () => {
 									},
 								]}
 							>
-								<Input className={styles.inputForm} style={{marginLeft: 80}} />
+								<Input className={styles.inputForm} />
 							</Form.Item>
 
 							<Form.Item
@@ -78,7 +78,7 @@ const SignUpPage = () => {
 									},
 								]}
 							>
-								<Input className={styles.inputForm} style={{marginLeft: 50}} />
+								<Input className={styles.inputForm} />
 							</Form.Item>
 
 							<Form.Item
@@ -86,10 +86,7 @@ const SignUpPage = () => {
 								name="password"
 								rules={[{required: true, message: 'Please input your password!'}]}
 							>
-								<Input.Password
-									className={styles.inputForm}
-									style={{marginLeft: 55}}
-								/>
+								<Input.Password className={styles.inputForm} />
 							</Form.Item>
 
 							<Form.Item
