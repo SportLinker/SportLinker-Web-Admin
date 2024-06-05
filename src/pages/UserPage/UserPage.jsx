@@ -5,12 +5,20 @@ import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 import {getAllUserSelector} from '../../redux/selectors';
-import {fetchUsers} from '../../redux/slices/userSlice';
+import {fetchUsers, createUser, updateUser, deleteUser} from '../../redux/slices/userSlice';
 import styles from './UserPage.module.css';
 import {Helmet} from 'react-helmet';
 
 const {Column} = Table;
 const {Item} = Form;
+const {Option} = Select;
+
+// Define enum for user gender
+const UserGender = {
+	men: 'Men',
+	women: 'Women',
+	other: 'Other',
+};
 
 export const UserPage = () => {
 	const [form] = Form.useForm();
@@ -33,34 +41,31 @@ export const UserPage = () => {
 		setUsers(allUser.list_user);
 	}, [allUser]);
 
-	console.log('allUser', allUser);
-	console.log('users', users);
-
 	const handleCreateUser = () => {
 		setModalVisible(true);
 		form.resetFields();
 	};
 
 	const handleEdit = (record) => {
-		console.log('Edit user:', record);
-
 		form.setFieldsValue({
-			user: record.user,
+			user: record.name,
 			email: record.email,
-			address: record.address,
+			phone: record.phone,
 			role: record.role,
+			gender: record.gender,
+			dob: record.date_of_birth ? dayjs(record.date_of_birth) : null,
 		});
+		setSelectedUser(record);
 		setModalVisible(true);
 	};
 
 	const handleDelete = (record) => {
-		console.log('Delete user:', record);
 		setSelectedUser(record);
 		setDeleteModalVisible(true);
 	};
 
 	const handleDeleteConfirm = () => {
-		console.log('Deleting user:', selectedUser);
+		dispatch(deleteUser(selectedUser.id));
 		setDeleteModalVisible(false);
 	};
 
@@ -71,7 +76,13 @@ export const UserPage = () => {
 	const handleModalSuccess = () => {
 		form.validateFields()
 			.then((values) => {
-				console.log('Submitted form values:', values);
+				if (selectedUser) {
+					dispatch(updateUser({ userId: selectedUser.id, userData: values }));
+				} else {
+					// Add status field for creating a user
+					values.status = 'active'; // Default status for new users
+					dispatch(createUser(values));
+				}
 				setModalVisible(false);
 				form.resetFields();
 			})
@@ -79,10 +90,21 @@ export const UserPage = () => {
 				console.error('Form validation error:', error);
 			});
 	};
-
+	
 	const handleModalCancel = () => {
 		setModalVisible(false);
 		form.resetFields();
+	};
+
+	// Custom validation function for password field
+	const validatePassword = (_, value) => {
+		const regex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+		if (!value || regex.test(value)) {
+			return Promise.resolve();
+		}
+		return Promise.reject(
+			'Password must contain at least 8 characters including uppercase letter, number, and special character.'
+		);
 	};
 
 	return (
@@ -118,11 +140,13 @@ export const UserPage = () => {
 											? '#ab741a'
 											: role === 'admin'
 												? '#37297a'
-												: role === 'hlv'
+												: role === 'coach'
 													? '#f9a825'
-													: role === 'Sân'
+													: role === 'stadium'
 														? '#4878d9'
-														: ''
+														: role === 'staff'
+															? '#ff0000'
+															: ''
 									}
 								>
 									{typeof role === 'string'
@@ -171,51 +195,54 @@ export const UserPage = () => {
 						/>
 					</Table>
 					<Modal
-						title={'Create User'}
+						title={selectedUser ? 'Edit User' : 'Create User'}
 						visible={modalVisible}
 						onOk={handleModalSuccess}
 						onCancel={handleModalCancel}
 					>
 						<Form form={form} layout="vertical" className={styles.formContainer}>
-							<Item
-								label="User"
-								name="user"
-								rules={[{required: true, message: 'User is required'}]}
-							>
+							<Item label="User" name="name">
+								<Input />
+							</Item>
+							<Item label="Email" name="email">
+								<Input />
+							</Item>
+							<Item label="Phone" name="phone">
 								<Input />
 							</Item>
 							<Item
-								label="Email"
-								name="email"
-								rules={[{required: true, message: 'Email is required'}]}
+								label="Password"
+								name="password"
+								// rules={[{validator: validatePassword}]}
 							>
-								<Input />
+								<Input.Password />
 							</Item>
-							<Item
-								label="Address"
-								name="address"
-								rules={[{required: true, message: 'Address is required'}]}
-							>
-								<Input />
-							</Item>
-							<Item
-								label="Role"
-								name="role"
-								rules={[{required: true, message: 'Role is required'}]}
-							>
+							<Item label="Role" name="role">
 								<Select>
-									<Select.Option value="Người dùng">Người dùng</Select.Option>
-									<Select.Option value="Shop">Shop</Select.Option>
-									<Select.Option value="hlv">hlv</Select.Option>
-									<Select.Option value="Sân">Sân</Select.Option>
+									<Option value="player">player</Option>
+									<Option value="admin">admin</Option>
+									<Option value="coach">coach</Option>
+									<Option value="stadium">stadium</Option>
+									<Option value="staff">staff</Option>
 								</Select>
 							</Item>
-							<Item
-								label="Date of birth"
-								name="dob"
-								rules={[{required: true, message: 'Date of birth is required'}]}
-							>
+							<Item label="Date of birth" name="dob">
 								<DatePicker format="YYYY-MM-DD" />
+							</Item>
+							<Item label="Gender" name="gender">
+								<Select>
+									{Object.keys(UserGender).map((gender) => (
+										<Option key={gender} value={gender}>
+											{UserGender[gender]}
+										</Option>
+									))}
+								</Select>
+							</Item>
+							<Item label="Status" name="status">
+								<Select>
+									<Option value="active">active</Option>
+									<Option value="inactive">inactive</Option>
+								</Select>
 							</Item>
 						</Form>
 					</Modal>
