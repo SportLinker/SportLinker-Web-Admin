@@ -48,12 +48,14 @@ export const UserPage = () => {
 
 	const handleEdit = (record) => {
 		form.setFieldsValue({
-			user: record.name,
+			name: record.name,
 			email: record.email,
 			phone: record.phone,
+			password: record.password,
 			role: record.role,
 			gender: record.gender,
-			dob: record.date_of_birth ? dayjs(record.date_of_birth) : null,
+			date_of_birth: record.date_of_birth ? dayjs(record.date_of_birth) : null,
+			status: record.status,
 		});
 		setSelectedUser(record);
 		setModalVisible(true);
@@ -65,7 +67,9 @@ export const UserPage = () => {
 	};
 
 	const handleDeleteConfirm = () => {
-		dispatch(deleteUser(selectedUser.id));
+		dispatch(deleteUser(selectedUser.id)).then(() =>
+			dispatch(fetchUsers({currentPage, pageSize}))
+		);
 		setDeleteModalVisible(false);
 	};
 
@@ -76,11 +80,15 @@ export const UserPage = () => {
 	const handleModalSuccess = () => {
 		form.validateFields()
 			.then((values) => {
+				if (values.date_of_birth) {
+					values.date_of_birth = dayjs(values.date_of_birth).toISOString();
+				}
 				if (selectedUser) {
-					dispatch(updateUser({ userId: selectedUser.id, userData: values }));
+					dispatch(updateUser({ userId: selectedUser.id, userData: values })).then(() =>
+						dispatch(fetchUsers({ currentPage, pageSize }))
+					);
 				} else {
-					// Add status field for creating a user
-					values.status = 'active'; // Default status for new users
+					values.status = 'inactive'; // Default status for new users
 					dispatch(createUser(values));
 				}
 				setModalVisible(false);
@@ -91,6 +99,7 @@ export const UserPage = () => {
 			});
 	};
 	
+
 	const handleModalCancel = () => {
 		setModalVisible(false);
 		form.resetFields();
@@ -159,6 +168,9 @@ export const UserPage = () => {
 							title="Date of birth"
 							dataIndex="date_of_birth"
 							key="date_of_birth"
+							render={(date_of_birth) =>
+								date_of_birth ? dayjs(date_of_birth).format('DD-MM-YYYY') : ''
+							}
 						/>
 						<Column title="Gender" dataIndex="gender" key="gender" />
 						<Column title="Status" dataIndex="status" key="status" />
@@ -226,8 +238,8 @@ export const UserPage = () => {
 									<Option value="staff">staff</Option>
 								</Select>
 							</Item>
-							<Item label="Date of birth" name="dob">
-								<DatePicker format="YYYY-MM-DD" />
+							<Item label="Date of birth" name="date_of_birth">
+								<DatePicker format="DD-MM-YYYY" />
 							</Item>
 							<Item label="Gender" name="gender">
 								<Select>
