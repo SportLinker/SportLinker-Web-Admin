@@ -7,7 +7,7 @@ import PermissionDeniedPage from '../pages/PermissionDeniedPage/PermissionDenied
 import {UserPage} from '../pages/UserPage/UserPage';
 import LoginPage from '../pages/LoginPage/LoginPage';
 import SignUpPage from '../pages/SignUpPage/SignUp';
-import {BetPage} from '../pages/BetPage/BetPage';
+import {EventPage} from '../pages/EventPage/EventPage';
 import {ReportPage} from '../pages/ReportPage/ReportPage';
 import AdPage from '../pages/AdPage/AdPage';
 import PostPage from '../pages/PostPage/PostPage';
@@ -41,7 +41,7 @@ export const AppRouters = () => {
 					path="/matches"
 					element={
 						<PrivateRoute>
-							<BetPage />
+							<EventPage />
 						</PrivateRoute>
 					}
 				/>
