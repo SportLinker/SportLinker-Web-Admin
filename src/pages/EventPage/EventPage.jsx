@@ -1,50 +1,49 @@
-import React, { useEffect, useState } from 'react'; // Make sure to import useState from 'react'
-import { useDispatch, useSelector } from 'react-redux';
-import { Button, DatePicker, Form, Input, Modal, Select, Table, Tooltip } from 'antd';
-import { Helmet } from 'react-helmet';
+import React, {useEffect, useState} from 'react'; // Make sure to import useState from 'react'
+import {useDispatch, useSelector} from 'react-redux';
+import {Button, DatePicker, Form, Input, Modal, Select, Table, Tooltip} from 'antd';
+import {Helmet} from 'react-helmet';
 import dayjs from 'dayjs';
-import { fetchEvents, createEvent, updateEvent, deleteEvent } from '../../redux/slices/eventSlice';
-import { getAllEventSelector } from '../../redux/selectors';
+import {fetchEvents, createEvent, updateEvent, deleteEvent} from '../../redux/slices/eventSlice';
+import {getAllEventSelector} from '../../redux/selectors';
 import styles from './EventPage.module.css';
-import { EditFilled } from '@ant-design/icons';
-import { DeleteFilled } from '@ant-design/icons';
+import {EditFilled} from '@ant-design/icons';
+import {DeleteFilled} from '@ant-design/icons';
 
-const { Column } = Table;
-const { Item } = Form;
-const { Option } = Select;
+const {Column} = Table;
+const {Item} = Form;
+const {Option} = Select;
 
 export const EventPage = () => {
-  const [form] = Form.useForm();
-  const [modalVisible, setModalVisible] = useState(false);
-  const [deleteModalVisible, setDeleteModalVisible] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
-  const [events, setEvents] = useState(null);
-  const [month, setMonth] = useState(new Date().getMonth() + 1); // Default to current month
-  const [year, setYear] = useState(new Date().getFullYear()); // Default to current year
+	const [form] = Form.useForm();
+	const [modalVisible, setModalVisible] = useState(false);
+	const [deleteModalVisible, setDeleteModalVisible] = useState(false);
+	const [selectedEvent, setSelectedEvent] = useState(null);
+	const [currentPage, setCurrentPage] = useState(1);
+	const [pageSize, setPageSize] = useState(10);
+	const [events, setEvents] = useState(null);
+	const [month, setMonth] = useState(new Date().getMonth() + 1); // Default to current month
+	const [year, setYear] = useState(new Date().getFullYear()); // Default to current year
 
-  const allEvents = useSelector(getAllEventSelector);
-  const dispatch = useDispatch();
+	const allEvents = useSelector(getAllEventSelector);
+	const dispatch = useDispatch();
 
+	// Function to handle month change
+	const handleMonthChange = (value) => {
+		setMonth(value);
+	};
 
-  // Function to handle month change
-  const handleMonthChange = (value) => {
-    setMonth(value);
-  };
+	// Function to handle year change
+	const handleYearChange = (value) => {
+		setYear(value);
+	};
 
-  // Function to handle year change
-  const handleYearChange = (value) => {
-    setYear(value);
-  };
+	useEffect(() => {
+		dispatch(fetchEvents({currentPage, pageSize, month, year}));
+	}, [dispatch, currentPage, pageSize, month, year]);
 
-  useEffect(() => {
-    dispatch(fetchEvents({ currentPage, pageSize, month, year }));
-  }, [dispatch, currentPage, pageSize, month, year]);
-
-  useEffect(() => {
-    setEvents(allEvents?.matches);
-  }, [allEvents]);
+	useEffect(() => {
+		setEvents(allEvents?.matches);
+	}, [allEvents]);
 
 	const handleCreateEvent = () => {
 		setModalVisible(true);
@@ -52,18 +51,18 @@ export const EventPage = () => {
 	};
 
 	const handleEdit = (record) => {
-		form.setFieldsValue({
-			match_name: record.match_name,
-			sport_name: record.sport_name,
-			total_join: record.total_join,
-			maximum_join: record.maximum_join,
-			start_time: record.start_time ? dayjs(record.start_time) : null,
-			end_time: record.end_time ? dayjs(record.end_time) : null,
-			status: record.status,
-		});
-		setSelectedEvent(record);
-		setModalVisible(true);
-	};
+    form.setFieldsValue({
+      match_name: record.match_name,
+      sport_name: record.sport_name,
+      total_join: record.total_join,
+      start_time: record.start_time ? dayjs(record.start_time) : null,
+      end_time: record.end_time ? dayjs(record.end_time) : null,
+      status: record.status,
+    });
+    setSelectedEvent(record);
+    setModalVisible(true);
+  };
+  
 
 	const handleDelete = (record) => {
 		setSelectedEvent(record);
@@ -153,60 +152,41 @@ export const EventPage = () => {
 					</Select>
 				</div>
 				<div>
-					<Table dataSource={events} rowKey="match_id" pagination={{pageSize: 5}}>
-						<Column title="Match Name" dataIndex="match_name" key="match_name" />
-						<Column title="Sport Name" dataIndex="sport_name" key="sport_name" />
-						<Column title="Total Join" dataIndex="total_join" key="total_join" />
-						<Column title="Maximum Join" dataIndex="maximum_join" key="maximum_join" />
-						<Column
-							title="Start Time"
-							dataIndex="start_time"
-							key="start_time"
-							render={(start_time) =>
-								start_time ? dayjs(start_time).format('DD-MM-YYYY HH:mm') : ''
-							}
-						/>
-						<Column
-							title="End Time"
-							dataIndex="end_time"
-							key="end_time"
-							render={(end_time) =>
-								end_time ? dayjs(end_time).format('DD-MM-YYYY HH:mm') : ''
-							}
-						/>
-						<Column title="Status" dataIndex="status" key="status" />
+        <Table dataSource={events} rowKey="match_id" pagination={{ pageSize: 5 }}>
+  <Column title="Match Name" dataIndex="match_name" key="match_name" render={(text, record) => (
+    <span>{text}</span>
+  )} />
+  <Column title="Sport Name" dataIndex="sport_name" key="sport_name" />
+  <Column title="Creators" key="creators" render={(text, record) => (
+    <div style={{ display: 'flex', alignItems: 'center' }}>
+      <img src={record.user_create.avatar_url} alt="Avatar" style={{ marginRight: 8, borderRadius: '50%', width: 30, height: 30 }} />
+      <span>{record.user_create.name}</span>
+    </div>
+  )} />
+  <Column title="Start Time" dataIndex="start_time" key="start_time" render={(start_time) =>
+    start_time ? dayjs(start_time).format('DD-MM-YYYY HH:mm') : ''
+  } />
+  <Column title="End Time" dataIndex="end_time" key="end_time" render={(end_time) =>
+    end_time ? dayjs(end_time).format('DD-MM-YYYY HH:mm') : ''
+  } />
+  <Column title="Status" dataIndex="status" key="status" />
+  <Column title="Action" key="action" render={(text, record) => (
+    <span>
+      <Button type="primary" style={{ marginRight: 10 }} onClick={() => handleEdit(record)}>
+        <Tooltip title="Edit">
+          <EditFilled />
+        </Tooltip>
+      </Button>
+      <Button type="danger" style={{ backgroundColor: '#ff0000', color: 'white' }} onClick={() => handleDelete(record)}>
+        <Tooltip title="Delete">
+          <DeleteFilled />
+        </Tooltip>
+      </Button>
+    </span>
+  )} />
+</Table>
 
-						<Column
-							title="Action"
-							key="action"
-							render={(text, record) => (
-								<span>
-									<Button
-										type="primary"
-										style={{marginRight: 10}}
-										onClick={() => handleEdit(record)}
-									>
-										<Tooltip title="Edit">
-											<EditFilled />
-										</Tooltip>
-									</Button>
-									<Button
-										type="danger"
-										style={{
-											marginRight: 10,
-											backgroundColor: '#ff0000',
-											color: 'white',
-										}}
-										onClick={() => handleDelete(record)}
-									>
-										<Tooltip title="Delete">
-											<DeleteFilled />
-										</Tooltip>
-									</Button>
-								</span>
-							)}
-						/>
-					</Table>
+
 					<Modal
 						title={selectedEvent ? 'Edit Event' : 'Create Event'}
 						visible={modalVisible}
