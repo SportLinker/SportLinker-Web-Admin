@@ -12,6 +12,7 @@ import {ReportPage} from '../pages/ReportPage/ReportPage';
 import AdPage from '../pages/AdPage/AdPage';
 import PostPage from '../pages/PostPage/PostPage';
 import TransactionPage from '../pages/TransactionPage/TransactionPage';
+import VoucherPage from '../pages/VoucherPage/VoucherPage';
 import PrivateRoute from './PrivateRoute';
 
 export const AppRouters = () => {
@@ -74,6 +75,14 @@ export const AppRouters = () => {
 					element={
 						<PrivateRoute>
 							<TransactionPage />
+						</PrivateRoute>
+					}
+				/>
+				<Route
+					path="/vouchers"
+					element={
+						<PrivateRoute>
+							<VoucherPage />
 						</PrivateRoute>
 					}
 				/>

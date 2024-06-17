@@ -16,6 +16,7 @@ import {
 	FundViewOutlined,
 	TransactionOutlined,
 	UserOutlined,
+	GiftOutlined ,
 } from '@ant-design/icons';
 
 const {Footer, Sider, Content} = Layout;
@@ -44,6 +45,8 @@ export const DefaultLayout = ({children}) => {
 		'/ads',
 		'/posts',
 		'/transactions',
+		'/vouchers',
+
 		// add more pages here
 	];
 
@@ -56,6 +59,7 @@ export const DefaultLayout = ({children}) => {
 		getItem('Manage Advertisement', '/ads', <FundViewOutlined />),
 		getItem('Manage Post', '/posts', <EditOutlined />),
 		getItem('Manage Transaction', '/transactions', <TransactionOutlined />),
+		getItem('Manage Voucher', '/vouchers', <GiftOutlined />),
 		// add more items here
 	];
 

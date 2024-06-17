@@ -1,28 +1,23 @@
-import React, {useEffect, useState} from 'react'; // Make sure to import useState from 'react'
+import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {Button, DatePicker, Form, Input, Modal, Select, Table, Tooltip} from 'antd';
+import {Modal, Select, Table, Tooltip} from 'antd';
 import {Helmet} from 'react-helmet';
 import dayjs from 'dayjs';
-import {fetchEvents, createEvent, updateEvent, deleteEvent} from '../../redux/slices/eventSlice';
+import {fetchEvents} from '../../redux/slices/eventSlice';
 import {getAllEventSelector} from '../../redux/selectors';
 import styles from './EventPage.module.css';
-import {EditFilled} from '@ant-design/icons';
-import {DeleteFilled} from '@ant-design/icons';
 
 const {Column} = Table;
-const {Item} = Form;
 const {Option} = Select;
 
 export const EventPage = () => {
-	const [form] = Form.useForm();
-	const [modalVisible, setModalVisible] = useState(false);
-	const [deleteModalVisible, setDeleteModalVisible] = useState(false);
-	const [selectedEvent, setSelectedEvent] = useState(null);
 	const [currentPage, setCurrentPage] = useState(1);
 	const [pageSize, setPageSize] = useState(10);
 	const [events, setEvents] = useState(null);
 	const [month, setMonth] = useState(new Date().getMonth() + 1); // Default to current month
 	const [year, setYear] = useState(new Date().getFullYear()); // Default to current year
+	const [selectedMatch, setSelectedMatch] = useState(null); // State for selected match
+	const [matchModalVisible, setMatchModalVisible] = useState(false); // State for modal visibility
 
 	const allEvents = useSelector(getAllEventSelector);
 	const dispatch = useDispatch();
@@ -45,68 +40,16 @@ export const EventPage = () => {
 		setEvents(allEvents?.matches);
 	}, [allEvents]);
 
-	const handleCreateEvent = () => {
-		setModalVisible(true);
-		form.resetFields();
+	// Function to handle row click
+	const handleRowClick = (record) => {
+		setSelectedMatch(record);
+		setMatchModalVisible(true);
 	};
 
-	const handleEdit = (record) => {
-    form.setFieldsValue({
-      match_name: record.match_name,
-      sport_name: record.sport_name,
-      total_join: record.total_join,
-      start_time: record.start_time ? dayjs(record.start_time) : null,
-      end_time: record.end_time ? dayjs(record.end_time) : null,
-      status: record.status,
-    });
-    setSelectedEvent(record);
-    setModalVisible(true);
-  };
-  
-
-	const handleDelete = (record) => {
-		setSelectedEvent(record);
-		setDeleteModalVisible(true);
-	};
-
-	const handleDeleteConfirm = () => {
-		dispatch(deleteEvent(selectedEvent.match_id)).then(() =>
-			dispatch(fetchEvents({currentPage, pageSize}))
-		);
-		setDeleteModalVisible(false);
-	};
-
-	const handleDeleteCancel = () => {
-		setDeleteModalVisible(false);
-	};
-
-	const handleModalSuccess = () => {
-		form.validateFields()
-			.then((values) => {
-				if (values.start_time) {
-					values.start_time = dayjs(values.start_time).toISOString();
-				}
-				if (values.end_time) {
-					values.end_time = dayjs(values.end_time).toISOString();
-				}
-				if (selectedEvent) {
-					dispatch(
-						updateEvent({eventId: selectedEvent.match_id, eventData: values})
-					).then(() => dispatch(fetchEvents({currentPage, pageSize})));
-				} else {
-					dispatch(createEvent(values));
-				}
-				setModalVisible(false);
-				form.resetFields();
-			})
-			.catch((error) => {
-				console.error('Form validation error:', error);
-			});
-	};
-
-	const handleModalCancel = () => {
-		setModalVisible(false);
-		form.resetFields();
+	// Function to handle modal close
+	const handleModalClose = () => {
+		setMatchModalVisible(false);
+		setSelectedMatch(null);
 	};
 
 	return (
@@ -120,9 +63,6 @@ export const EventPage = () => {
 				</div>
 
 				<div className={styles.createBtn}>
-					<Button type="primary" onClick={handleCreateEvent}>
-						Create Event
-					</Button>
 					<Select
 						defaultValue={dayjs()
 							.month(month - 1)
@@ -152,82 +92,54 @@ export const EventPage = () => {
 					</Select>
 				</div>
 				<div>
-        <Table dataSource={events} rowKey="match_id" pagination={{ pageSize: 5 }}>
-  <Column title="Match Name" dataIndex="match_name" key="match_name" render={(text, record) => (
-    <span>{text}</span>
-  )} />
-  <Column title="Sport Name" dataIndex="sport_name" key="sport_name" />
-  <Column title="Creators" key="creators" render={(text, record) => (
-    <div style={{ display: 'flex', alignItems: 'center' }}>
-      <img src={record.user_create.avatar_url} alt="Avatar" style={{ marginRight: 8, borderRadius: '50%', width: 30, height: 30 }} />
-      <span>{record.user_create.name}</span>
-    </div>
-  )} />
-  <Column title="Start Time" dataIndex="start_time" key="start_time" render={(start_time) =>
-    start_time ? dayjs(start_time).format('DD-MM-YYYY HH:mm') : ''
-  } />
-  <Column title="End Time" dataIndex="end_time" key="end_time" render={(end_time) =>
-    end_time ? dayjs(end_time).format('DD-MM-YYYY HH:mm') : ''
-  } />
-  <Column title="Status" dataIndex="status" key="status" />
-  <Column title="Action" key="action" render={(text, record) => (
-    <span>
-      <Button type="primary" style={{ marginRight: 10 }} onClick={() => handleEdit(record)}>
-        <Tooltip title="Edit">
-          <EditFilled />
-        </Tooltip>
-      </Button>
-      <Button type="danger" style={{ backgroundColor: '#ff0000', color: 'white' }} onClick={() => handleDelete(record)}>
-        <Tooltip title="Delete">
-          <DeleteFilled />
-        </Tooltip>
-      </Button>
-    </span>
-  )} />
-</Table>
-
+					<Table
+						dataSource={events}
+						rowKey="match_id"
+						pagination={{ pageSize: 5 }}
+						onRow={(record) => ({
+							onClick: () => handleRowClick(record),
+						})}
+					>
+						<Column title="Match Name" dataIndex="match_name" key="match_name" render={(text, record) => (
+							<span>{text}</span>
+						)} />
+						<Column title="Sport Name" dataIndex="sport_name" key="sport_name" />
+						<Column title="Creators" key="creators" render={(text, record) => (
+							<div style={{ display: 'flex', alignItems: 'center' }}>
+								<img src={record.user_create.avatar_url} alt="Avatar" style={{ marginRight: 8, borderRadius: '50%', width: 30, height: 30 }} />
+								<span>{record.user_create.name}</span>
+							</div>
+						)} />
+						<Column title="Start Time" dataIndex="start_time" key="start_time" render={(start_time) =>
+							start_time ? dayjs(start_time).format('DD-MM-YYYY HH:mm') : ''
+						} />
+						<Column title="End Time" dataIndex="end_time" key="end_time" render={(end_time) =>
+							end_time ? dayjs(end_time).format('DD-MM-YYYY HH:mm') : ''
+						} />
+						<Column title="Status" dataIndex="status" key="status" />
+					</Table>
 
 					<Modal
-						title={selectedEvent ? 'Edit Event' : 'Create Event'}
-						visible={modalVisible}
-						onOk={handleModalSuccess}
-						onCancel={handleModalCancel}
+						title="Match Details"
+						visible={matchModalVisible}
+						onCancel={handleModalClose}
+						footer={null}
 					>
-						<Form form={form} layout="vertical" className={styles.formContainer}>
-							<Item label="Match Name" name="match_name">
-								<Input />
-							</Item>
-							<Item label="Sport Name" name="sport_name">
-								<Input />
-							</Item>
-							<Item label="Total Join" name="total_join">
-								<Input type="number" />
-							</Item>
-							<Item label="Maximum Join" name="maximum_join">
-								<Input type="number" />
-							</Item>
-							<Item label="Start Time" name="start_time">
-								<DatePicker showTime format="DD-MM-YYYY HH:mm" />
-							</Item>
-							<Item label="End Time" name="end_time">
-								<DatePicker showTime format="DD-MM-YYYY HH:mm" />
-							</Item>
-							<Item label="Status" name="status">
-								<Select>
-									<Option value="upcoming">upcoming</Option>
-									<Option value="ongoing">ongoing</Option>
-									<Option value="completed">completed</Option>
-								</Select>
-							</Item>
-						</Form>
-					</Modal>
-					<Modal
-						title="Confirm Delete"
-						visible={deleteModalVisible}
-						onOk={handleDeleteConfirm}
-						onCancel={handleDeleteCancel}
-					>
-						<p>Are you sure you want to delete this event?</p>
+						{selectedMatch && (
+							<div>
+								<p><strong>Match Name:</strong> {selectedMatch.match_name}</p>
+								<p><strong>Sport Name:</strong> {selectedMatch.sport_name}</p>
+								<p><strong>Total Join:</strong> {selectedMatch.total_join}</p>
+								<p><strong>Maximum Join:</strong> {selectedMatch.maximum_join}</p>
+								<p><strong>Start Time:</strong> {selectedMatch.start_time ? dayjs(selectedMatch.start_time).format('DD-MM-YYYY HH:mm') : ''}</p>
+								<p><strong>End Time:</strong> {selectedMatch.end_time ? dayjs(selectedMatch.end_time).format('DD-MM-YYYY HH:mm') : ''}</p>
+								<p><strong>Status:</strong> {selectedMatch.status}</p>
+								<p><strong>Creator:</strong> {selectedMatch.user_create.name}</p>
+								<div style={{ display: 'flex', alignItems: 'center' }}>
+									<img src={selectedMatch.user_create.avatar_url} alt="Avatar" style={{ marginRight: 8, borderRadius: '50%', width: 30, height: 30 }} />
+								</div>
+							</div>
+						)}
 					</Modal>
 				</div>
 			</div>
