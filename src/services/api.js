@@ -1,8 +1,7 @@
 import axios from 'axios';
 import {toast} from 'react-toastify';
 
-const API = 'http://localhost:8080/v1/api';
-// const API_URL = 'https://6531f3964d4c2e3f333d6d0e.mockapi.io/';
+const API = 'https://fine-special-ram.ngrok-free.app/v1/api';
 let accessToken =
 	localStorage.getItem('user') && JSON.parse(localStorage.getItem('user')).token.accessToken;
 
@@ -11,15 +10,20 @@ let refreshToken =
 
 let userId = localStorage.getItem('user') && JSON.parse(localStorage.getItem('user')).user.id;
 
-// export const api_mockoi = axios.create({
-// 	baseURL: API_URL,
-// });
+const user = localStorage.getItem('user');
+if (user) {
+	const {token, user: storedUser} = JSON.parse(user);
+	accessToken = token.accessToken;
+	refreshToken = token.refreshToken;
+	userId = storedUser.id;
+}
 export const api = axios.create({
 	baseURL: API,
 	headers: {
 		authentication: accessToken,
 		'x-client-id': userId,
 		refresh: refreshToken,
+		'ngrok-skip-browser-warning': 'true', // Add this line for ngrok skip browser warning
 	},
 });
 
