@@ -4,7 +4,7 @@ import dayjs from 'dayjs';
 import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
-import {getAllUserSelector} from '../../redux/selectors';
+import {getAllUserSelector, getLoadingUserSelector} from '../../redux/selectors';
 import {fetchUsers, createUser, updateUser, deleteUser} from '../../redux/slices/userSlice';
 import styles from './UserPage.module.css';
 import {Helmet} from 'react-helmet';
@@ -30,6 +30,7 @@ export const UserPage = () => {
 	const [users, setUsers] = useState(null);
 
 	const allUser = useSelector(getAllUserSelector);
+	const loading = useSelector(getLoadingUserSelector);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
@@ -84,8 +85,8 @@ export const UserPage = () => {
 					values.date_of_birth = dayjs(values.date_of_birth).toISOString();
 				}
 				if (selectedUser) {
-					dispatch(updateUser({ userId: selectedUser.id, userData: values })).then(() =>
-						dispatch(fetchUsers({ currentPage, pageSize }))
+					dispatch(updateUser({userId: selectedUser.id, userData: values})).then(() =>
+						dispatch(fetchUsers({currentPage, pageSize}))
 					);
 				} else {
 					values.status = 'inactive'; // Default status for new users
@@ -98,7 +99,6 @@ export const UserPage = () => {
 				console.error('Form validation error:', error);
 			});
 	};
-	
 
 	const handleModalCancel = () => {
 		setModalVisible(false);
@@ -132,7 +132,12 @@ export const UserPage = () => {
 					</Button>
 				</div>
 				<div>
-					<Table dataSource={users} rowKey="id" pagination={{pageSize: 5}}>
+					<Table
+						dataSource={users}
+						rowKey="id"
+						pagination={{pageSize: 5}}
+						loading={loading}
+					>
 						<Column title="User" dataIndex="name" key="name" />
 						<Column title="Email" dataIndex="email" key="email" />
 						<Column title="Phone" dataIndex="phone" key="phone" />
