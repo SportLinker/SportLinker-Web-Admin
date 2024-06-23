@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {Modal, Select, Table, Tooltip} from 'antd';
+import {Modal, Select, Table, Tooltip, Tag} from 'antd';
 import {Helmet} from 'react-helmet';
 import dayjs from 'dayjs';
 import {fetchEvents} from '../../redux/slices/eventSlice';
@@ -116,7 +116,19 @@ export const EventPage = () => {
 						<Column title="End Time" dataIndex="end_time" key="end_time" render={(end_time) =>
 							end_time ? dayjs(end_time).format('DD-MM-YYYY HH:mm') : ''
 						} />
-						<Column title="Status" dataIndex="status" key="status" />
+						<Column title="Status" dataIndex="status" key="status"render={(status) => (
+              <Tag
+                color={
+                  status === 'completed'
+                    ? 'green'
+                    : status === 'cancelled'
+                    ? 'orange'
+                    : 'red'
+                }
+              >
+                {status.toUpperCase()}
+              </Tag>
+            )} />
 					</Table>
 
 					<Modal

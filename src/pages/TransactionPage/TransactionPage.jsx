@@ -1,120 +1,146 @@
-import React, {useState} from 'react';
-import {Table, Tag, Typography, Modal} from 'antd';
-import {formatPrice} from '../../utils';
-import styles from './TransactionPage.module.css';
+import React, { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { Table, Tag, Typography, Modal, Avatar } from 'antd';
+import { Helmet } from 'react-helmet';
 import dayjs from 'dayjs';
-import SearchFilter from '../../components/SearchFilter/SearchFilter'; // Import the SearchFilter component
-import {Helmet} from 'react-helmet';
+import { fetchTransactions } from '../../redux/slices/transactionSlice';
+import { getAllTransactionsSelector } from '../../redux/selectors';
+import styles from './TransactionPage.module.css';
 
-const {Title} = Typography;
-const {Column} = Table;
+const { Column } = Table;
+const { Title } = Typography;
 
 const TransactionPage = () => {
-	const [modalVisible, setModalVisible] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [transactions, setTransactions] = useState(null);
+  const [selectedTransaction, setSelectedTransaction] = useState(null); // State for selected transaction
+  const [transactionModalVisible, setTransactionModalVisible] = useState(false); // State for modal visibility
 
-	const handleOk = () => {
-		setModalVisible(false);
-	};
+  const allTransactions = useSelector(getAllTransactionsSelector);
+  const dispatch = useDispatch();
 
-	const handleCancel = () => {
-		setModalVisible(false);
-	};
+  useEffect(() => {
+    dispatch(fetchTransactions({ currentPage, pageSize }));
+  }, [dispatch, currentPage, pageSize]);
 
-	const formatDate = (dateString) => {
-		return dayjs(dateString).format('DD-MM-YYYY');
-	};
+  useEffect(() => {
+    setTransactions(allTransactions?.transactions);
+  }, [allTransactions]);
 
-	const dummyData = [...Array(10).keys()].map((index) => ({
-		key: index,
-		created_at: dayjs().subtract(index, 'day').format(),
-		user: `User ${index + 1}`,
-		item: `Item ${index + 1}`,
-		amount: Math.floor(Math.random() * 1000) * 1000,
-		transaction_code: `ABC${index + 1}`,
-		status: index % 3 === 0 ? 'completed' : index % 3 === 1 ? 'pending' : 'failed',
-	}));
+  // Function to handle row click
+  const handleRowClick = (record) => {
+    setSelectedTransaction(record);
+    setTransactionModalVisible(true);
+  };
 
-	const handleSearch = (values) => {
-		// Implement search logic here
-		console.log('Search values:', values);
-	};
+  // Function to handle modal close
+  const handleModalClose = () => {
+    setTransactionModalVisible(false);
+    setSelectedTransaction(null);
+  };
 
-	const fields = [
-		{label: 'User', name: 'user'},
-		{label: 'Item', name: 'item'},
-		{
-			label: 'Status',
-			name: 'status',
-			type: 'Select',
-			options: ['completed', 'pending', 'failed'],
-		},
-		// Add more fields as needed
-	];
-	return (
-		<>
-			<Helmet>
-				<title>Manage Transaction</title>
-			</Helmet>
-			<div className={styles.transactionContainer}>
-				<div className={styles.reportTitle}>
-					<h1>History Transaction</h1>
-				</div>
-				<div className={styles.searchFilter}>
-					<SearchFilter fields={fields} onSearch={handleSearch} />
-				</div>
-				<div className={styles.createBtn}>{/* Button for creating a report */}</div>
-				<Table dataSource={dummyData} rowKey="key">
-					<Column
-						title="Create Day"
-						dataIndex="created_at"
-						key="created_at"
-						align="center"
-						render={(created_at) => <span>{formatDate(created_at)}</span>}
-					/>
-					<Column title="User" dataIndex="user" key="user" />
-					<Column title="Item" dataIndex="item" key="item" />
-					<Column
-						title="Amount"
-						dataIndex="amount"
-						key="amount"
-						render={(amount) => <div>{formatPrice(amount)}đ</div>}
-					/>
-					<Column
-						title="Transaction Code"
-						dataIndex="transaction_code"
-						key="transaction_code"
-					/>
-					<Column
-						title="Status"
-						dataIndex="status"
-						key="status"
-						render={(status) => (
-							<Tag
-								color={
-									status === 'completed'
-										? 'green'
-										: status === 'pending'
-											? 'blue'
-											: 'red'
-								}
-							>
-								{status.toUpperCase()}
-							</Tag>
-						)}
-					/>
-				</Table>
-				<Modal
-					title="Transaction Detail"
-					visible={modalVisible}
-					onOk={handleOk}
-					onCancel={handleCancel}
-					className={styles.customModal}
-				>
-					{/* Table for Transaction Detail */}
-				</Modal>
-			</div>
-		</>
-	);
+  return (
+    <>
+      <Helmet>
+        <title>Manage Transactions</title>
+      </Helmet>
+      <div className={styles.transactionContainer}>
+        <div className={styles.transactionTitle}>
+        <h1>Manage Transactions</h1>
+        </div>
+
+        <Table
+          dataSource={transactions}
+          rowKey="id"
+          pagination={{ pageSize: 5 }}
+          onRow={(record) => ({
+            onClick: () => handleRowClick(record),
+          })}
+        >
+          <Column
+            title="Transaction Code"
+            dataIndex="transaction_code"
+            key="transaction_code"
+          />
+          <Column
+            title="Amount"
+            dataIndex="amount"
+            key="amount"
+            render={(amount) => <span>{amount}đ</span>}
+          />
+          <Column
+            title="Type"
+            dataIndex="type"
+            key="type"
+          />
+          <Column
+            title="Status"
+            dataIndex="status"
+            key="status"
+            render={(status) => (
+              <Tag
+                color={
+                  status === 'completed'
+                    ? 'green'
+                    : status === 'pending'
+                    ? 'blue'
+                    : status === 'cancelled'
+                    ? 'orange'
+                    : 'red'
+                }
+              >
+                {status.toUpperCase()}
+              </Tag>
+            )}
+          />
+          <Column
+            title="Created At"
+            dataIndex="created_at"
+            key="created_at"
+            render={(createdAt) => (
+              <span>{dayjs(createdAt).format('DD-MM-YYYY HH:mm')}</span>
+            )}
+          />
+          <Column
+            title="User"
+            key="user"
+            render={(text, record) => (
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <Avatar src={record.user.avatar_url} />
+                <span style={{ marginLeft: 8 }}>{record.user.name}</span>
+              </div>
+            )}
+          />
+        </Table>
+
+        <Modal
+          title="Transaction Details"
+          visible={transactionModalVisible}
+          onCancel={handleModalClose}
+          footer={null}
+        >
+          {selectedTransaction && (
+            <div className={styles.modalContent}>
+              <p><strong>Transaction Code:</strong> {selectedTransaction.transaction_code}</p>
+              <p><strong>Amount:</strong> {selectedTransaction.amount}đ</p>
+              <p><strong>Type:</strong> {selectedTransaction.type}</p>
+              <p><strong>Status:</strong> {selectedTransaction.status}</p>
+              <p><strong>Created At:</strong> {dayjs(selectedTransaction.created_at).format('DD-MM-YYYY HH:mm')}</p>
+              {/* Add more details as needed */}
+              <div style={{ marginTop: 16 }}>
+                <strong>User:</strong>
+                <div style={{ display: 'flex', alignItems: 'center', marginTop: 8 }}>
+                  <Avatar src={selectedTransaction.user.avatar_url} />
+                  <span style={{ marginLeft: 8 }}>{selectedTransaction.user.name}</span>
+                </div>
+              </div>
+            </div>
+          )}
+        </Modal>
+      </div>
+    </>
+  );
 };
 
 export default TransactionPage;

@@ -10,3 +10,6 @@ export const getAllEventSelector = (state) => state.eventSlice?.events || [];
 //vouchers
 export const getVoucherSelector = (state) => state.voucherSlice?.voucherInfo || {};
 export const getAllVoucherSelector = (state) => state.voucherSlice?.vouchers || [];
+// transactions
+export const getTransactionSelector = (state) => state.transactionSlice?.transactionInfo || {};
+export const getAllTransactionsSelector = (state) => state.transactionSlice?.transactions || [];
