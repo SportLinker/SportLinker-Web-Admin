@@ -57,6 +57,7 @@ const TransactionPage = () => {
 					rowKey="id"
 					pagination={{
 						pageSize,
+						current: currentPage,
 						total: totalPage * pageSize,
 						onChange: (page, size) => {
 							setCurrentPage(page);
