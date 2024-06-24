@@ -8,7 +8,7 @@ export const fetchVouchers = createAsyncThunk(
 		try {
 			const url = `/vouchers?page_size=${pageSize}&page_number=${currentPage}`;
 			const response = await api.get(url);
-			return response.data.metadata.vouchers;
+			return response.data.metadata;
 		} catch (error) {
 			return rejectWithValue(error.response.data);
 		}
@@ -28,30 +28,30 @@ export const createVoucher = createAsyncThunk(
 	}
 );
 const handleModalSuccess = async () => {
-    form.validateFields()
-        .then(async (values) => {
-            const formattedDate = moment(values.expired_at).format('YYYY-MM-DD');
-            try {
-                const response = await axios.post('http://localhost:5173/v1/api/vouchers', {
-                    voucher_code: values.voucher_code,
-                    voucher_name: values.voucher_name,
-                    expired_at: formattedDate,
-                    value: parseFloat(values.value),
-                    to: values.to
-                });
+	form.validateFields()
+		.then(async (values) => {
+			const formattedDate = moment(values.expired_at).format('YYYY-MM-DD');
+			try {
+				const response = await axios.post('http://localhost:5173/v1/api/vouchers', {
+					voucher_code: values.voucher_code,
+					voucher_name: values.voucher_name,
+					expired_at: formattedDate,
+					value: parseFloat(values.value),
+					to: values.to,
+				});
 
-                message.success('Voucher created successfully');
-                setModalVisible(false);
-                form.resetFields();
-                dispatch(fetchVouchers({ pageSize: 10, currentPage: 1 }));
-            } catch (error) {
-                console.error('Error creating voucher:', error);
-                message.error('Failed to create voucher');
-            }
-        })
-        .catch((error) => {
-            console.error('Form validation error:', error);
-        });
+				message.success('Voucher created successfully');
+				setModalVisible(false);
+				form.resetFields();
+				dispatch(fetchVouchers({pageSize: 10, currentPage: 1}));
+			} catch (error) {
+				console.error('Error creating voucher:', error);
+				message.error('Failed to create voucher');
+			}
+		})
+		.catch((error) => {
+			console.error('Form validation error:', error);
+		});
 };
 
 export const voucherSlice = createSlice({

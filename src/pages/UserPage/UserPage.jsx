@@ -26,7 +26,8 @@ export const UserPage = () => {
 	const [deleteModalVisible, setDeleteModalVisible] = useState(false);
 	const [selectedUser, setSelectedUser] = useState(null);
 	const [currentPage, setCurrentPage] = useState(1);
-	const [pageSize, setPageSize] = useState(10);
+	const [pageSize, setPageSize] = useState(5);
+	const [totalPage, setTotalPage] = useState(1);
 	const [users, setUsers] = useState(null);
 
 	const allUser = useSelector(getAllUserSelector);
@@ -36,10 +37,13 @@ export const UserPage = () => {
 
 	useEffect(() => {
 		dispatch(fetchUsers({currentPage, pageSize}));
-	}, [dispatch]);
+	}, [dispatch, currentPage, pageSize]);
 
 	useEffect(() => {
-		setUsers(allUser.list_user);
+		if (allUser) {
+			setUsers(allUser?.list_user);
+			setTotalPage(allUser?.total_page);
+		}
 	}, [allUser]);
 
 	const handleCreateUser = () => {
@@ -135,7 +139,15 @@ export const UserPage = () => {
 					<Table
 						dataSource={users}
 						rowKey="id"
-						pagination={{pageSize: 5}}
+						pagination={{
+							pageSize,
+							current: currentPage,
+							total: totalPage * pageSize,
+							onChange: (page, size) => {
+								setCurrentPage(page);
+								setPageSize(size);
+							},
+						}}
 						loading={loading}
 					>
 						<Column title="User" dataIndex="name" key="name" />
