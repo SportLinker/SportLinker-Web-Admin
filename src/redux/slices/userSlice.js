@@ -6,7 +6,7 @@ export const fetchUsers = createAsyncThunk(
 	'users/fetchAll',
 	async ({currentPage, pageSize}, {rejectWithValue}) => {
 		try {
-			let url = `/users?page_size=${pageSize}&page_number=${currentPage}`;
+			const url = `/users?page_size=${pageSize}&page_number=${currentPage}`;
 			const response = await api.get(url);
 			return response.data.metadata;
 		} catch (error) {
