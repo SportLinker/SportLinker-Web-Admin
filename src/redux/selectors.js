@@ -15,3 +15,6 @@ export const getAllVoucherSelector = (state) => state.voucherSlice?.vouchers || 
 // transactions
 export const getTransactionSelector = (state) => state.transactionSlice?.transactionInfo || {};
 export const getAllTransactionsSelector = (state) => state.transactionSlice?.transactions || [];
+// stadiums
+export const getStadiumSelector = (state) => state.stadiumSlice?.stadiumInfo || {};
+export const getAllStadiumSelector = (state) => state.stadiumSlice?.stadiums || [];

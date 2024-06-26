@@ -14,6 +14,7 @@ import PostPage from '../pages/PostPage/PostPage';
 import TransactionPage from '../pages/TransactionPage/TransactionPage';
 import VoucherPage from '../pages/VoucherPage/VoucherPage';
 import PrivateRoute from './PrivateRoute';
+import { StadiumPage } from '../pages/StadiumPage/StadiumPage';
 
 export const AppRouters = () => {
 	return (
@@ -79,6 +80,14 @@ export const AppRouters = () => {
 					}
 				/>
 				<Route
+					path="/stadiums"
+					element={
+						<PrivateRoute>
+							<StadiumPage />
+						</PrivateRoute>
+					}
+				/>
+				<Route
 					path="/vouchers"
 					element={
 						<PrivateRoute>
@@ -86,6 +95,7 @@ export const AppRouters = () => {
 						</PrivateRoute>
 					}
 				/>
+
 				<Route path="/permission-denied" element={<PermissionDeniedPage />} />
 				<Route path="*" element={<NotFoundPage />} />
 			</Routes>

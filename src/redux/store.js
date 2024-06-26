@@ -6,7 +6,7 @@ import userLoginSlice from './slices/userLoginSlice';
 import { eventSlice } from './slices/eventSlice';
 import { voucherSlice } from './slices/voucherSlice';
 import { transactionSlice } from './slices/transactionSlice'; // Import transactionSlice
-
+import { stadiumSlice } from './slices/stadiumSlice';
 const rootPersistConfig = {
   key: 'root',
   storage,
@@ -18,7 +18,8 @@ const rootReducer = combineReducers({
   userLoginSlice: userLoginSlice.reducer,
   eventSlice: eventSlice.reducer,
   voucherSlice: voucherSlice.reducer,
-  transactionSlice: transactionSlice.reducer, // Add transactionSlice reducer
+  transactionSlice: transactionSlice.reducer, 
+  stadiumSlice: stadiumSlice.reducer,
 });
 
 const persistedReducer = persistReducer(rootPersistConfig, rootReducer);
