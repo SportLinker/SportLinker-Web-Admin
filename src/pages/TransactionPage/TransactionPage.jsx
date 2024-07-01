@@ -4,7 +4,7 @@ import { Table, Tag, Typography, Modal, Avatar, Button, Select, Input, Form } fr
 import { Helmet } from 'react-helmet';
 import dayjs from 'dayjs';
 import { fetchTransactions, updateTransactionStatus } from '../../redux/slices/transactionSlice';
-import { getAllTransactionsSelector } from '../../redux/selectors';
+import { getAllTransactionsSelector, getLoadingTransactionSelector } from '../../redux/selectors';
 import styles from './TransactionPage.module.css';
 
 const { Column } = Table;
@@ -22,6 +22,7 @@ const TransactionPage = () => {
     const [rejectedReason, setRejectedReason] = useState('');
 
     const allTransactions = useSelector(getAllTransactionsSelector);
+    const loading = useSelector(getLoadingTransactionSelector);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -86,6 +87,7 @@ const TransactionPage = () => {
                             setPageSize(size);
                         },
                     }}
+                    loading={loading}
                     onRow={(record) => ({
                         onClick: () => handleRowClick(record),
                     })}

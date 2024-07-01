@@ -4,7 +4,7 @@ import { Modal, Select, Table, Tag, message } from 'antd'; // Import message fro
 import { Helmet } from 'react-helmet';
 import dayjs from 'dayjs';
 import { fetchStadiums, updateStadiumStatus } from '../../redux/slices/stadiumSlice';
-import { getAllStadiumSelector } from '../../redux/selectors';
+import { getAllStadiumSelector, getLoadingStadiumSelector } from '../../redux/selectors';
 import styles from './StadiumPage.module.css';
 
 const { Column } = Table;
@@ -20,6 +20,7 @@ export const StadiumPage = () => {
     const [statusToUpdate, setStatusToUpdate] = useState(null); // State for stadium status update
 
     const allStadiums = useSelector(getAllStadiumSelector);
+    const loading = useSelector(getLoadingStadiumSelector);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -82,6 +83,7 @@ export const StadiumPage = () => {
                                 setPageSize(size);
                             },
                         }}
+                        loading={loading}
                         onRow={(record) => ({
                             onClick: () => handleRowClick(record),
                         })}

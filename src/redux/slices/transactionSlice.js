@@ -47,25 +47,25 @@ export const transactionSlice = createSlice({
                 state.loading = true;
             })
             .addCase(fetchTransactions.fulfilled, (state, action) => {
-                state.loading = true;
+                state.loading = false;
                 state.transactions = action.payload;
             })
             .addCase(fetchTransactions.rejected, (state, action) => {
-                state.loading = true;
+                state.loading = false;
                 state.error = action.payload;
             })
             .addCase(updateTransactionStatus.pending, (state) => {
                 state.loading = true;
             })
             .addCase(updateTransactionStatus.fulfilled, (state, action) => {
-                state.loading = true;
+                state.loading = false;
                 const updatedTransaction = action.payload;
                 state.transactions = state.transactions.map(transaction =>
                     transaction.id === updatedTransaction.id ? updatedTransaction : transaction
                 );
             })
             .addCase(updateTransactionStatus.rejected, (state, action) => {
-                state.loading = true;
+                state.loading = false;
                 state.error = action.payload;
             });
     },
