@@ -44,3 +44,46 @@
 .actionBtn {
 	margin-right: 10px;
 }
+
+.userListContainer {
+	max-height: 200px; /* Adjust height as needed */
+	overflow-y: auto;
+	padding-right: 15px; /* Space for scrollbar */
+	background: #f9f9f9;
+	border-radius: 8px;
+	padding: 10px;
+	border: 1px solid #e0e0e0;
+}
+
+.userDetail {
+	display: flex;
+	align-items: center;
+	margin-bottom: 10px;
+	border: 1px solid #e0e0e0;
+	border-radius: 8px;
+	padding: 10px;
+	background: #fff;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.userDetail:last-child {
+	margin-bottom: 0;
+}
+
+.userAvatar {
+	position: relative;
+}
+
+.userAvatar img {
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
+	margin-right: 10px;
+	border: 2px solid #4878d9;
+}
+
+.userName p {
+	margin: 0;
+	font-weight: bold;
+	color: #333;
+}

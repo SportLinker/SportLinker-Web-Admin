@@ -1,5 +1,5 @@
 //selectors.js
-
+import { createSelector } from 'reselect';
 // users
 export const getUserLoginSelector = (state) => state.userLoginSlice.userInfo;
 export const getUserSelector = (state) => state.userSlice.userInfo;
@@ -14,6 +14,11 @@ export const getLoadingEventSelector = (state) => state.eventSlice.loading;
 export const getVoucherSelector = (state) => state.voucherSlice?.voucherInfo || {};
 export const getAllVoucherSelector = (state) => state.voucherSlice?.vouchers || [];
 export const getLoadingVoucherSelector = (state) => state.voucherSlice.loading;
+const getVoucherDetails = state => state.voucherSlice.voucherDetails;
+export const getVoucherDetailsSelector = createSelector(
+    [getVoucherDetails],
+    (voucherDetails) => voucherDetails
+  );
 
 // transactions
 export const getTransactionSelector = (state) => state.transactionSlice?.transactionInfo || {};

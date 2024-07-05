@@ -1,149 +1,122 @@
-// DefaultLayout.jsx
-
 import React, {useState} from 'react';
 import {Layout, Menu} from 'antd';
-import {useSelector} from 'react-redux';
 import {Link, useLocation, useNavigate} from 'react-router-dom';
-import {imageExporter} from '../assets/images';
-import {getUserSelector} from '../redux/selectors';
-import {Header} from '../components/Header/Header';
+import { DashboardOutlined, DisconnectOutlined, EditOutlined, FileTextOutlined, FundViewOutlined, TransactionOutlined, UserOutlined, GiftOutlined, HomeOutlined } from '@ant-design/icons';
+import { imageExporter } from '../assets/images';
 import TopNavbar from '../components/TopNavBar/TopNavBar'; // Import the TopNavbar component
-import {
-	DashboardOutlined,
-	DisconnectOutlined,
-	EditOutlined,
-	FileTextOutlined,
-	FundViewOutlined,
-	TransactionOutlined,
-	UserOutlined,
-	GiftOutlined,
-	HomeOutlined,
-} from '@ant-design/icons';
-
 const {Footer, Sider, Content} = Layout;
 
-function getItem(label, key, icon, children) {
-	return {
-		key,
-		icon,
-		children,
-		label,
-	};
-}
+const getItem = (label, key, icon) => ({key, icon, label});
 
-export const DefaultLayout = ({children}) => {
+const DefaultLayout = ({children}) => {
 	const navigate = useNavigate();
 	const [collapsed, setCollapsed] = useState(false);
 	const location = useLocation();
 	const [selectMenu, setSelectMenu] = useState(location.pathname);
 
-	// Pages which will show sidebar menu
 	const pageLocation = [
 		'/dashboard',
 		'/users',
 		'/matches',
-		'/reports',
-		'/ads',
-		'/posts',
+		// '/reports',
+        // '/ads',
+        // '/posts',
 		'/transactions',
 		'/stadiums',
 		'/vouchers',
-
-		// add more pages here
 	];
 
-	// Menu sidebar items
 	const items = [
 		getItem('Dashboard', '/dashboard', <DashboardOutlined />),
 		getItem('Manage User', '/users', <UserOutlined />),
 		getItem('Manage Match', '/matches', <DisconnectOutlined />),
-		getItem('Manage Report', '/reports', <FileTextOutlined />),
-		getItem('Manage Advertisement', '/ads', <FundViewOutlined />),
-		getItem('Manage Post', '/posts', <EditOutlined />),
+		// getItem('Manage Report', '/reports', <FileTextOutlined />),
+        // getItem('Manage Advertisement', '/ads', <FundViewOutlined />),
+        // getItem('Manage Post', '/posts', <EditOutlined />),
 		getItem('Manage Transaction', '/transactions', <TransactionOutlined />),
 		getItem('Manage Stadium', '/stadiums', <HomeOutlined />),
 		getItem('Manage Voucher', '/vouchers', <GiftOutlined />),
-
-		// add more items here
 	];
 
-	// handle save menu and redirect
 	const handleClickMenuItem = (e) => {
-		console.log('click ', e.key);
 		setSelectMenu(e.key);
 		navigate(e.key);
 	};
 
-	// Conditionally render header, top navbar, and footer based on location
+	const toggleCollapsed = () => {
+		setCollapsed(!collapsed);
+	};
+
 	const isLoginPage = location.pathname === '/login';
 	const isSignUpPage = location.pathname === '/signup';
 	const showHeaderFooter = !(isLoginPage || isSignUpPage);
 
 	return (
 		<Layout style={{minHeight: '100vh'}}>
-			<Layout>
-				<Sider
-					collapsed={collapsed}
-					onCollapse={(value) => setCollapsed(value)}
-					theme="light"
-					style={{
-						display: pageLocation.includes(location.pathname) ? 'block' : 'none',
-					}}
-				>
-					<Link to="/dashboard" style={{width: '200px', height: '100px'}}>
-						<img
-							style={{
-								width: '100%',
-								maxHeight: '100%',
-								objectPosition: 'center',
-								objectFit: 'cover',
-							}}
-							src={imageExporter.logo}
-							alt="logo"
-						></img>
-					</Link>
-					<Menu
-						onClick={handleClickMenuItem}
-						theme="light"
-						defaultSelectedKeys={['1']}
-						selectedKeys={[selectMenu]}
-						mode="inline"
-						items={items}
-					/>
-				</Sider>
-				<Layout
-					style={{
-						backgroundColor: '#eaeaea',
-						display: 'flex',
-						flexDirection: 'column',
-					}}
-				>
-					{showHeaderFooter && <TopNavbar />} {/* Conditionally render TopNavbar */}
-					{showHeaderFooter && <Header />} {/* Conditionally render Header */}
-					<Content
+			<Sider
+				collapsed={collapsed}
+				collapsible
+				theme="light"
+				onCollapse={toggleCollapsed}
+				style={{display: pageLocation.includes(location.pathname) ? 'block' : 'none'}}
+			>
+				<Link to="/dashboard" style={{display: 'block', height: '100px'}}>
+					<img
+						src={collapsed ? imageExporter.tinylogo : imageExporter.logo}
+						alt="logo"
 						style={{
-							margin: '16px',
-							overflow: 'hidden',
-							backgroundColor: '#ffffff',
+							width: collapsed ? '60%' : '100%',
+							height: 'auto',
+							display: 'block',
+							margin: '10px auto',
+							objectFit: 'cover',
+						}}
+					/>
+				</Link>
+				<Menu
+					onClick={handleClickMenuItem}
+					theme="light"
+					selectedKeys={[selectMenu]}
+					mode="inline"
+				>
+					{items.map((item) => (
+						<Menu.Item key={item.key} icon={item.icon}>
+							<Link to={item.key}>{item.label}</Link>
+						</Menu.Item>
+					))}
+				</Menu>
+			</Sider>
+			<Layout style={{backgroundColor: '#eaeaea', minHeight: '100vh'}}>
+				{showHeaderFooter && <TopNavbar />}
+				<Content
+					style={{
+						overflow: 'hidden',
+						backgroundColor: '#FBFCFB',
+					}}
+				>
+					<div
+						style={{
+							minHeight: 360,
+							margin: '15px',
+							boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)', // Adjust shadow values as needed
+							borderRadius: '15px', // Optional: add border radius for rounded corners
+							padding: '20px', // Optional: add padding for inner content spacing
+							backgroundColor: '#ffffff', // Optional: set a background color if needed
 						}}
 					>
-						<div
-							style={{
-								minHeight: 360,
-							}}
-						>
-							{children}
-						</div>
-					</Content>
-					{showHeaderFooter && (
-						<Footer style={{textAlign: 'center'}}>
-							SportLinker Admin Page ©{new Date().getFullYear()} Created by
-							SportLinker Team
-						</Footer>
-					)}{' '}
-					{/* Conditionally render Footer */}
-				</Layout>
+						{children}
+					</div>
+				</Content>
+
+				{showHeaderFooter && (
+					<Footer style={{textAlign: 'center'}}>
+						SportLinker Admin Page ©{new Date().getFullYear()} Created by SportLinker
+						Team
+					</Footer>
+				)}
 			</Layout>
 		</Layout>
 	);
 };
+
+export default DefaultLayout;
