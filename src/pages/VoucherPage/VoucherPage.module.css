@@ -112,4 +112,9 @@
   .userList li:hover {
 	background-color: #f0f0f0;
   }
-  
+  .avatar {
+    width: 24px; /* Adjust size as needed */
+    height: 24px;
+    border-radius: 50%;
+    margin-right: 8px; /* Spacing between avatar and user name */
+}

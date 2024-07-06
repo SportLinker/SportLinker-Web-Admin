@@ -141,7 +141,7 @@ export const UserPage = () => {
 					<div className={styles.searchBar}>
 						<Search
 							placeholder="Search by name"
-							onSearch={handleSearch}
+							onChange={(e) => handleSearch(e.target.value)}
 							enterButton
 							allowClear
 							onClear={handleClearSearch}
