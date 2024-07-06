@@ -8,7 +8,7 @@ const {Footer, Sider, Content} = Layout;
 
 const getItem = (label, key, icon) => ({key, icon, label});
 
-const DefaultLayout = ({children}) => {
+export const DefaultLayout = ({children}) => {
 	const navigate = useNavigate();
 	const [collapsed, setCollapsed] = useState(false);
 	const location = useLocation();
@@ -118,5 +118,3 @@ const DefaultLayout = ({children}) => {
 		</Layout>
 	);
 };
-
-export default DefaultLayout;

@@ -4,9 +4,12 @@ import { api } from '../../services/api';
 // Fetch users
 export const fetchUsers = createAsyncThunk(
   'users/fetchAll',
-  async ({ currentPage, pageSize }, { rejectWithValue }) => {
+  async ({ currentPage, pageSize, name }, { rejectWithValue }) => {
     try {
-      const url = `/users?page_size=${pageSize}&page_number=${currentPage}`;
+      let url = `/users?page_size=${pageSize}&page_number=${currentPage}`;
+      if (name) {
+        url += `&name=${name}`;
+      }
       const response = await api.get(url);
       return response.data.metadata;
     } catch (error) {
@@ -16,17 +19,14 @@ export const fetchUsers = createAsyncThunk(
 );
 
 // Create user
-export const createUser = createAsyncThunk(
-  'users/create',
-  async (userData, { rejectWithValue }) => {
-    try {
-      const response = await api.post('/users', userData);
-      return response.data;
-    } catch (error) {
-      return rejectWithValue(error.response.data);
-    }
+export const createUser = createAsyncThunk('users/create', async (userData, { rejectWithValue }) => {
+  try {
+    const response = await api.post('/users', userData);
+    return response.data;
+  } catch (error) {
+    return rejectWithValue(error.response.data);
   }
-);
+});
 
 // Update user
 export const updateUser = createAsyncThunk(
@@ -42,17 +42,14 @@ export const updateUser = createAsyncThunk(
 );
 
 // Delete user
-export const deleteUser = createAsyncThunk(
-  'users/delete',
-  async (userId, { rejectWithValue }) => {
-    try {
-      const response = await api.delete(`/users/${userId}`);
-      return response.data;
-    } catch (error) {
-      return rejectWithValue(error.response.data);
-    }
+export const deleteUser = createAsyncThunk('users/delete', async (userId, { rejectWithValue }) => {
+  try {
+    const response = await api.delete(`/users/${userId}`);
+    return response.data;
+  } catch (error) {
+    return rejectWithValue(error.response.data);
   }
-);
+});
 
 export const userSlice = createSlice({
   name: 'userSlice',
@@ -83,7 +80,7 @@ export const userSlice = createSlice({
         state.loading = true;
       })
       .addCase(createUser.fulfilled, (state, action) => {
-        state.loading = true;
+        state.loading = false;
         // Optionally, update the state with the new user
       })
       .addCase(createUser.rejected, (state, action) => {
@@ -94,7 +91,7 @@ export const userSlice = createSlice({
         state.loading = true;
       })
       .addCase(updateUser.fulfilled, (state, action) => {
-        state.loading = true;
+        state.loading = false;
         // Optionally, update the state with the updated user
       })
       .addCase(updateUser.rejected, (state, action) => {
@@ -105,7 +102,7 @@ export const userSlice = createSlice({
         state.loading = true;
       })
       .addCase(deleteUser.fulfilled, (state, action) => {
-        state.loading = true;
+        state.loading = false;
         // Optionally, update the state after user deletion
       })
       .addCase(deleteUser.rejected, (state, action) => {
