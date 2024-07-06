@@ -87,3 +87,29 @@
 	font-weight: bold;
 	color: #333;
 }
+.userList {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	background-color: #fff;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+	border: 1px solid #ccc;
+	position: absolute;
+	z-index: 1000; /* Ensure it appears above other elements */
+	max-height: 200px; /* Adjust as needed */
+	overflow-y: auto; /* Enable scrolling if content exceeds max-height */
+	width: calc(100% - 22px); /* Adjust width minus scrollbar width */
+  }
+  
+  .userList li {
+	padding: 10px;
+	cursor: pointer;
+	white-space: nowrap; /* Prevent wrapping text */
+	overflow: hidden; /* Hide text overflow */
+	text-overflow: ellipsis; /* Show ellipsis for overflow */
+  }
+  
+  .userList li:hover {
+	background-color: #f0f0f0;
+  }
+  
