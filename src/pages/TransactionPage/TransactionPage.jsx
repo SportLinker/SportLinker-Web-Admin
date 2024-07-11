@@ -13,13 +13,15 @@ const { Option } = Select;
 
 const TransactionPage = () => {
     const [currentPage, setCurrentPage] = useState(1);
-    const [pageSize, setPageSize] = useState(10);
+    const [pageSize, setPageSize] = useState(5);
     const [transactions, setTransactions] = useState(null);
     const [selectedTransaction, setSelectedTransaction] = useState(null);
     const [transactionModalVisible, setTransactionModalVisible] = useState(false);
     const [totalPage, setTotalPage] = useState(1);
     const [status, setStatus] = useState('');
     const [rejectedReason, setRejectedReason] = useState('');
+    const [sortField, setSortField] = useState('');
+    const [sortOrder, setSortOrder] = useState('');
 
     const allTransactions = useSelector(getAllTransactionsSelector);
     const loading = useSelector(getLoadingTransactionSelector);
@@ -65,6 +67,16 @@ const TransactionPage = () => {
         }
     };
 
+    const handleTableChange = (pagination, filters, sorter) => {
+        if (sorter.columnKey !== sortField) {
+            setSortField(sorter.columnKey);
+            setSortOrder(sorter.order === 'ascend' ? 'asc' : 'desc');
+        } else {
+            setSortOrder('');
+            setSortField('');
+        }
+    };
+
     return (
         <>
             <Helmet>
@@ -91,19 +103,30 @@ const TransactionPage = () => {
                     onRow={(record) => ({
                         onClick: () => handleRowClick(record),
                     })}
+                    onChange={handleTableChange}
                 >
                     <Column
                         title="Transaction Code"
                         dataIndex="transaction_code"
                         key="transaction_code"
+                        sorter={(a, b) => a.transaction_code.localeCompare(b.transaction_code)}
+                        sortOrder={sortField === 'transaction_code' && sortOrder}
                     />
                     <Column
                         title="Amount"
                         dataIndex="amount"
                         key="amount"
                         render={(amount) => <span>{amount}đ</span>}
+                        sorter={(a, b) => a.amount - b.amount}
+                        sortOrder={sortField === 'amount' && sortOrder}
                     />
-                    <Column title="Type" dataIndex="type" key="type" />
+                    <Column
+                        title="Type"
+                        dataIndex="type"
+                        key="type"
+                        sorter={(a, b) => a.type.localeCompare(b.type)}
+                        sortOrder={sortField === 'type' && sortOrder}
+                    />
                     <Column
                         title="Status"
                         dataIndex="status"
@@ -123,6 +146,8 @@ const TransactionPage = () => {
                                 {status.toUpperCase()}
                             </Tag>
                         )}
+                        sorter={(a, b) => a.status.localeCompare(b.status)}
+                        sortOrder={sortField === 'status' && sortOrder}
                     />
                     <Column
                         title="Created At"
@@ -131,6 +156,8 @@ const TransactionPage = () => {
                         render={(createdAt) => (
                             <span>{dayjs(createdAt).format('DD-MM-YYYY HH:mm')}</span>
                         )}
+                        sorter={(a, b) => new Date(a.created_at) - new Date(b.created_at)}
+                        sortOrder={sortField === 'created_at' && sortOrder}
                     />
                     <Column
                         title="User"
@@ -141,6 +168,8 @@ const TransactionPage = () => {
                                 <span style={{ marginLeft: 8 }}>{record.user.name}</span>
                             </div>
                         )}
+                        sorter={(a, b) => a.user.name.localeCompare(b.user.name)}
+                        sortOrder={sortField === 'user' && sortOrder}
                     />
                 </Table>
 
