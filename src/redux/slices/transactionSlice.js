@@ -4,9 +4,12 @@ import { api } from '../../services/api';
 // Fetch all transactions
 export const fetchTransactions = createAsyncThunk(
     'transactions/fetchAll',
-    async ({ currentPage, pageSize }, { rejectWithValue }) => {
+    async ({ currentPage, pageSize, type }, { rejectWithValue }) => {
         try {
-            const url = `/transactions?page_size=${pageSize}&page_number=${currentPage}`;
+            let url = `/transactions?page_size=${pageSize}&page_number=${currentPage}`;
+            if (type) {
+                url += `&type=${type}`;
+            }
             const response = await api.get(url);
             return response.data.metadata;
         } catch (error) {
@@ -14,6 +17,7 @@ export const fetchTransactions = createAsyncThunk(
         }
     }
 );
+
 
 // Update transaction status
 export const updateTransactionStatus = createAsyncThunk(
