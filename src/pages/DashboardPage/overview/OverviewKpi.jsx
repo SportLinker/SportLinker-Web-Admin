@@ -54,7 +54,7 @@ const useChartOptions = () => {
 				color: theme.palette.divider,
 				show: true,
 			},
-			categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+			categories: [], // Để trống ban đầu
 			labels: {
 				style: {
 					colors: theme.palette.text.secondary,
@@ -73,12 +73,15 @@ const useChartOptions = () => {
 };
 
 export const OverviewKpi = (props) => {
-	const {chartSeries = [], stats = []} = props;
+	const {chartSeries = [], stats = [], chartOptionsOverride} = props;
 	const chartOptions = useChartOptions();
+
+	console.log(chartSeries);
+	console.log(chartOptionsOverride);
 
 	return (
 		<Card>
-			<CardHeader title="Key Performance Indicators" />
+			{/* <CardHeader title="Key Performance Indicators" />
 			<Divider />
 			<CardContent>
 				<Box
@@ -109,9 +112,14 @@ export const OverviewKpi = (props) => {
 							<Typography variant="h6">{item.value}</Typography>
 						</Card>
 					))}
-				</Box>
-				<Chart height="350" options={chartOptions} series={chartSeries} type="area" />
-			</CardContent>
+				</Box> */}
+			<Chart
+				height="350"
+				options={chartOptionsOverride || chartOptions}
+				series={chartSeries}
+				type="line" // Sử dụng loại biểu đồ line để hiển thị
+			/>
+			{/* </CardContent> */}
 		</Card>
 	);
 };
@@ -119,4 +127,5 @@ export const OverviewKpi = (props) => {
 OverviewKpi.propTypes = {
 	chartSeries: PropTypes.array,
 	stats: PropTypes.array,
+	chartOptionsOverride: PropTypes.object,
 };
