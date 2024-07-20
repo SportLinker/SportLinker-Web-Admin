@@ -1,8 +1,9 @@
 import axios from 'axios';
 import {toast} from 'react-toastify';
 
-const API = 'https://fine-special-ram.ngrok-free.app/v1/api';
-// const API = 'http://localhost:8080/v1/api';
+// const API = 'http://14.225.198.20:8080/v1/api';
+// const API = 'https://fine-special-ram.ngrok-free.app/v1/api';
+const API = 'https://be.sportlinker.site/v1/api';
 let accessToken =
 	localStorage.getItem('user') && JSON.parse(localStorage.getItem('user')).token.accessToken;
 

@@ -104,7 +104,7 @@ const TransactionPage = () => {
 					<Option value="withdraw">Withdraw</Option>
 				</Select>
 				<Table
-					dataSource={transactions}
+					dataSource={transactions || []}
 					rowKey="id"
 					pagination={{
 						pageSize,

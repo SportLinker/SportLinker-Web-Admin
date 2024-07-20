@@ -1,7 +1,7 @@
-import Chart from 'react-apexcharts';
-import PropTypes from 'prop-types';
-import {Box, Card, CardContent, CardHeader, Divider, Typography} from '@mui/material';
+import {Card} from '@mui/material';
 import {useTheme} from '@mui/material/styles';
+import PropTypes from 'prop-types';
+import Chart from 'react-apexcharts';
 
 const useChartOptions = () => {
 	const theme = useTheme();
@@ -54,7 +54,7 @@ const useChartOptions = () => {
 				color: theme.palette.divider,
 				show: true,
 			},
-			categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+			categories: [], // Để trống ban đầu
 			labels: {
 				style: {
 					colors: theme.palette.text.secondary,
@@ -73,45 +73,38 @@ const useChartOptions = () => {
 };
 
 export const OverviewKpi = (props) => {
-	const {chartSeries = [], stats = []} = props;
+	const {chartSeries = [], stats = [], chartOptionsOverride} = props;
 	const chartOptions = useChartOptions();
+
+	console.log(chartSeries);
+	console.log(chartOptionsOverride);
 
 	return (
 		<Card>
-			<CardHeader title="Key Performance Indicators" />
-			<Divider />
-			<CardContent>
-				<Box
-					sx={{
-						gap: 3,
-						display: 'grid',
-						gridTemplateColumns: {
-							md: 'repeat(5, 1fr)',
-							sm: 'repeat(2, 1fr)',
-							xs: 'repeat(1, 1fr)',
-						},
-					}}
-				>
-					{stats.map((item) => (
-						<Card
-							elevation={0}
-							key={item.label}
-							sx={{
-								alignItems: 'center',
-								backgroundColor: '#F3F4F7',
-								borderRadius: 1,
-								p: 2,
-							}}
-						>
-							<Typography color="text.secondary" variant="overline">
-								{item.label}
-							</Typography>
-							<Typography variant="h6">{item.value}</Typography>
-						</Card>
-					))}
-				</Box>
-				<Chart height="350" options={chartOptions} series={chartSeries} type="area" />
-			</CardContent>
+			<Chart
+				height="350"
+				options={chartOptionsOverride || chartOptions}
+				series={chartSeries}
+				type="line" // Sử dụng loại biểu đồ line để hiển thị
+			/>
+		</Card>
+	);
+};
+export const OverviewBookKpi = (props) => {
+	const {chartSeries = [], stats = [], chartOptionsOverride} = props;
+	const chartOptions = useChartOptions();
+
+	console.log(chartSeries);
+	console.log(chartOptionsOverride);
+
+	return (
+		<Card>
+			<Chart
+				height="350"
+				options={chartOptionsOverride || chartOptions}
+				series={chartSeries}
+				type="area"
+			/>
 		</Card>
 	);
 };
@@ -119,4 +112,11 @@ export const OverviewKpi = (props) => {
 OverviewKpi.propTypes = {
 	chartSeries: PropTypes.array,
 	stats: PropTypes.array,
+	chartOptionsOverride: PropTypes.object,
+};
+
+OverviewBookKpi.propTypes = {
+	chartSeries: PropTypes.array,
+	stats: PropTypes.array,
+	chartOptionsOverride: PropTypes.object,
 };

@@ -74,7 +74,7 @@ export const StadiumPage = () => {
 				</div>
 				<div>
 					<Table
-						dataSource={stadiums}
+						dataSource={stadiums || []}
 						rowKey="id"
 						pagination={{
 							pageSize,

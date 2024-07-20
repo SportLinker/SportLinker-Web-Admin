@@ -204,7 +204,7 @@ const VoucherPage = () => {
 				</div>
 				<div>
 					<Table
-						dataSource={voucherList}
+						dataSource={voucherList || []}
 						rowKey="id"
 						pagination={{
 							pageSize,
