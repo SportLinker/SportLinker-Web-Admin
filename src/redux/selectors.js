@@ -18,3 +18,4 @@ export const getAllTransactionsSelector = (state) => state.transactionSlice?.tra
 
 // dashboard
 export const getAllDashboardSelector = (state) => state.dashboardSlice.dashboards;
+export const getLoadingDashboardSelector = (state) => state.dashboardSlice.loading;
