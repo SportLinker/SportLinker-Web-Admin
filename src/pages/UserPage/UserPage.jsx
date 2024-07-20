@@ -137,7 +137,7 @@ export const UserPage = () => {
 				<div className={styles.userTitle}>
 					<h1>Manage User</h1>
 				</div>
-				<div style={{display:'flex'}}>
+				<div style={{display: 'flex'}}>
 					<div className={styles.searchBar}>
 						<Search
 							placeholder="Search by name"
@@ -155,7 +155,7 @@ export const UserPage = () => {
 				</div>
 
 				<Table
-					dataSource={allUser?.list_user}
+					dataSource={allUser?.list_user || []}
 					rowKey="id"
 					pagination={{
 						pageSize,

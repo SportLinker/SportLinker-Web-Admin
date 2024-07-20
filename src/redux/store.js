@@ -5,12 +5,9 @@ import {dashboardSlice} from './slices/dashboardSlice';
 import {eventSlice} from './slices/eventSlice';
 import {transactionSlice} from './slices/transactionSlice'; // Import transactionSlice
 import userLoginSlice from './slices/userLoginSlice';
-import {eventSlice} from './slices/eventSlice';
 import {voucherSlice} from './slices/voucherSlice';
-import {transactionSlice} from './slices/transactionSlice'; // Import transactionSlice
 import {stadiumSlice} from './slices/stadiumSlice';
 import {userSlice} from './slices/userSlice';
-import {voucherSlice} from './slices/voucherSlice';
 
 const rootPersistConfig = {
 	key: 'root',
@@ -25,11 +22,6 @@ const rootReducer = combineReducers({
 	voucherSlice: voucherSlice.reducer,
 	transactionSlice: transactionSlice.reducer,
 	stadiumSlice: stadiumSlice.reducer,
-	userSlice: userSlice.reducer,
-	userLoginSlice: userLoginSlice.reducer,
-	eventSlice: eventSlice.reducer,
-	voucherSlice: voucherSlice.reducer,
-	transactionSlice: transactionSlice.reducer,
 	dashboardSlice: dashboardSlice.reducer,
 });
 
