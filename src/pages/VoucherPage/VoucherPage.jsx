@@ -1,14 +1,23 @@
-import {Fragment} from 'react';
-import React, {useEffect, useState} from 'react';
-import {Button, Form, Modal, Table, Input, DatePicker, message} from 'antd';
+import React, {useEffect, useState, Fragment} from 'react';
+import {Button, Form, Modal, Table, Input, DatePicker, message, Popconfirm} from 'antd';
 import moment from 'moment';
-import axios from 'axios'; // Import Axios for making HTTP requests
 import {useDispatch, useSelector} from 'react-redux';
-import {fetchVouchers, createVoucher} from '../../redux/slices/voucherSlice'; // Import createVoucher from Redux slice
-import {getAllVoucherSelector} from '../../redux/selectors';
+import {
+	fetchVouchers,
+	createVoucher,
+	deleteVoucher,
+	fetchVoucherDetails,
+} from '../../redux/slices/voucherSlice';
+import {fetchUsers} from '../../redux/slices/userSlice';
+import {
+	getAllVoucherSelector,
+	getLoadingVoucherSelector,
+	getVoucherDetailsSelector,
+} from '../../redux/selectors';
+import {Helmet} from 'react-helmet';
 
 import styles from './VoucherPage.module.css';
-import {Helmet} from 'react-helmet';
+import {imageExporter} from '../../assets/images';
 
 const {Column} = Table;
 const {Item} = Form;
@@ -16,36 +25,110 @@ const {Item} = Form;
 const VoucherPage = () => {
 	const dispatch = useDispatch();
 	const vouchers = useSelector(getAllVoucherSelector);
+	const voucherDetails = useSelector(getVoucherDetailsSelector);
+	const loading = useSelector(getLoadingVoucherSelector);
+	const [selectedUsers, setSelectedUsers] = useState([]);
+	const [selectedUserIds, setSelectedUserIds] = useState([]);
+	const [searchTerm, setSearchTerm] = useState('');
+	const [usersLoading, setUsersLoading] = useState(false);
+	const [users, setUsers] = useState([]);
 	const [form] = Form.useForm();
 	const [modalVisible, setModalVisible] = useState(false);
+	const [detailModalVisible, setDetailModalVisible] = useState(false);
+	const [currentVoucher, setCurrentVoucher] = useState(null);
 	const [currentPage, setCurrentPage] = useState(1);
 	const [pageSize, setPageSize] = useState(10);
 	const [totalPage, setTotalPage] = useState(1);
-	const [voucherList, setVoucherList] = useState(null);
+	const [voucherList, setVoucherList] = useState([]);
 
 	useEffect(() => {
 		dispatch(fetchVouchers({pageSize, currentPage}));
-	}, [dispatch]);
+	}, [dispatch, pageSize, currentPage]);
 
 	useEffect(() => {
 		if (vouchers) {
-			setVoucherList(vouchers.vouchers);
+			setVoucherList(vouchers);
 			setTotalPage(vouchers.total_page);
 		}
 	}, [vouchers]);
 
-	console.log('voucherList', voucherList);
+	useEffect(() => {
+		setSelectedUserIds(selectedUsers.map((user) => user.id));
+	}, [selectedUsers]);
+
+	const handleSearch = (value) => {
+		setSearchTerm(value);
+		if (value.trim() !== '') {
+			setCurrentPage(1);
+			setUsersLoading(true);
+
+			dispatch(fetchUsers({currentPage: 1, pageSize, name: value}))
+				.then((response) => {
+					if (response.payload && response.payload.list_user) {
+						setUsers(response.payload.list_user);
+					} else {
+						setUsers([]);
+					}
+				})
+				.catch((error) => {
+					console.error('Error fetching users:', error);
+					setUsers([]);
+				})
+				.finally(() => {
+					setUsersLoading(false);
+				});
+		} else {
+			setUsers([]);
+		}
+	};
+
+	// const handleClearSearch = () => {
+	// 	setSearchTerm('');
+	// 	setCurrentPage(1);
+	// 	dispatch(fetchUsers({currentPage: 1, pageSize, name: ''}))
+	// 		.then((response) => {
+	// 			if (response && response.metadata && response.metadata.list_user) {
+	// 				setUsers(response.metadata.list_user);
+	// 			} else {
+	// 				setUsers([]);
+	// 			}
+	// 		})
+	// 		.catch((error) => {
+	// 			console.error('Error fetching users:', error);
+	// 			setUsers([]);
+	// 		})
+	// 		.finally(() => {
+	// 			setUsersLoading(false);
+	// 		});
+	// };
+
+	const handleUserSelect = (user) => {
+		setSelectedUsers((prevSelectedUsers) => {
+			if (!prevSelectedUsers.find((u) => u.id === user.id)) {
+				return [...prevSelectedUsers, user];
+			}
+			return prevSelectedUsers;
+		});
+		setSearchTerm('');
+	};
+
+	const handleDeleteUser = (userId) => {
+		setSelectedUsers((prevSelectedUsers) =>
+			prevSelectedUsers.filter((user) => user.id !== userId)
+		);
+	};
 
 	const handleCreateVoucher = () => {
 		setModalVisible(true);
 		form.resetFields();
+		form.setFieldsValue({to: 'All'});
 	};
 
 	const handleModalSuccess = () => {
 		form.validateFields()
 			.then(async (values) => {
-				const formattedDate = moment(values.expired_at).toISOString(); // Convert to ISO-8601 format
-				const floatValue = parseFloat(values.value) / 100; // Convert percentage to decimal
+				const formattedDate = moment(values.expired_at).toISOString();
+				const floatValue = parseFloat(values.value) / 100;
 
 				try {
 					await dispatch(
@@ -54,13 +137,14 @@ const VoucherPage = () => {
 							voucher_name: values.voucher_name,
 							expired_at: formattedDate,
 							value: floatValue,
-							to: values.to,
+							to: selectedUserIds,
 						})
 					);
 
 					message.success('Voucher created successfully');
 					setModalVisible(false);
 					form.resetFields();
+					setSelectedUsers([]);
 					dispatch(fetchVouchers({pageSize, currentPage}));
 				} catch (error) {
 					console.error('Error creating voucher:', error);
@@ -79,6 +163,29 @@ const VoucherPage = () => {
 
 	const formatDate = (date) => {
 		return moment(date).format('DD/MM/YYYY');
+	};
+
+	const handleDelete = async (voucherId) => {
+		try {
+			await dispatch(deleteVoucher(voucherId));
+			message.success('Voucher deleted successfully');
+			dispatch(fetchVouchers({pageSize, currentPage}));
+		} catch (error) {
+			console.error('Error deleting voucher:', error);
+			message.error('Failed to delete voucher');
+		}
+	};
+
+	const handleViewDetails = async (voucherId) => {
+		try {
+			await dispatch(fetchVoucherDetails(voucherId));
+			const selectedVoucher = voucherList.find((voucher) => voucher.id === voucherId);
+			setCurrentVoucher(selectedVoucher);
+			setDetailModalVisible(true);
+		} catch (error) {
+			console.error('Error fetching voucher details:', error);
+			message.error('Failed to fetch voucher details');
+		}
 	};
 
 	return (
@@ -108,6 +215,14 @@ const VoucherPage = () => {
 								setPageSize(size);
 							},
 						}}
+						loading={loading}
+						onRow={(record) => {
+							return {
+								onClick: () => {
+									handleViewDetails(record.id);
+								},
+							};
+						}}
 					>
 						<Column title="Voucher Code" dataIndex="voucher_code" key="voucher_code" />
 						<Column title="Voucher Name" dataIndex="voucher_name" key="voucher_name" />
@@ -115,7 +230,7 @@ const VoucherPage = () => {
 							title="Value"
 							dataIndex="value"
 							key="value"
-							render={(value) => <span>{`${(value * 100).toFixed(1)}%`}</span>}
+							render={(value) => <span>{(value * 100).toFixed(1)}%</span>}
 						/>
 						<Column
 							title="Expired At"
@@ -129,8 +244,88 @@ const VoucherPage = () => {
 							key="created_at"
 							render={(created_at) => <span>{formatDate(created_at)}</span>}
 						/>
-						<Column title="To" dataIndex="to" key="to" />
+						<Column
+							title="Actions"
+							key="actions"
+							render={(_, record) => (
+								<Fragment>
+									<Popconfirm
+										title="Are you sure to delete this voucher?"
+										onConfirm={() => handleDelete(record.id)}
+										okText="Yes"
+										cancelText="No"
+									>
+										<Button type="link" danger>
+											Delete
+										</Button>
+									</Popconfirm>
+								</Fragment>
+							)}
+						/>
 					</Table>
+					<Modal
+						title="Voucher Details"
+						visible={detailModalVisible}
+						onCancel={() => setDetailModalVisible(false)}
+						footer={[
+							<Button key="back" onClick={() => setDetailModalVisible(false)}>
+								Close
+							</Button>,
+						]}
+					>
+						{currentVoucher && (
+							<Fragment>
+								<p>
+									<strong>Voucher Code:</strong> {currentVoucher.voucher_code}
+								</p>
+								<p>
+									<strong>Voucher Name:</strong> {currentVoucher.voucher_name}
+								</p>
+								<p>
+									<strong>Value:</strong>{' '}
+									{(currentVoucher.value * 100).toFixed(1)}%
+								</p>
+								<p>
+									<strong>Expired At:</strong>{' '}
+									{formatDate(currentVoucher.expired_at)}
+								</p>
+								{voucherDetails &&
+									voucherDetails.detail &&
+									voucherDetails.detail.length > 0 && (
+										<Fragment>
+											<p>
+												<strong>To Users:</strong>
+											</p>
+											<div className={styles.userListContainer}>
+												{voucherDetails.detail.map((detail) => (
+													<div
+														key={detail.user.id}
+														className={styles.userDetail}
+													>
+														<img
+															src={
+																detail.user.avatar_url ||
+																imageExporter.defaultAvatar
+															}
+															alt="User Avatar"
+															className={styles.avatar}
+															onError={(e) => {
+																e.target.src =
+																	imageExporter.defaultAvatar;
+															}}
+														/>
+														<div>{detail.user.name}</div>
+														<div>{detail.user.phone}</div>
+														<div>{detail.user.email}</div>
+													</div>
+												))}
+											</div>
+										</Fragment>
+									)}
+							</Fragment>
+						)}
+					</Modal>
+
 					<Modal
 						title="Create Voucher"
 						visible={modalVisible}
@@ -171,9 +366,47 @@ const VoucherPage = () => {
 							<Item
 								label="To"
 								name="to"
-								rules={[{required: true, message: 'Please input To!'}]}
+								rules={[{required: true, message: 'Please select To!'}]}
 							>
-								<Input />
+								<Input.Search
+									placeholder="Search user by name"
+									onChange={(e) => handleSearch(e.target.value)}
+									value={searchTerm}
+									allowClear // Add clear button to clear search term
+								/>
+								{!usersLoading && searchTerm && (
+									<ul className={styles.userList}>
+										{users.map((user) => (
+											<li
+												key={user.id}
+												onClick={() => handleUserSelect(user)}
+											>
+												<div>{user.name}</div>
+												<div>{user.phone || 'Phone: N/A'}</div>
+												<div>{user.email || 'Email: N/A'}</div>
+											</li>
+										))}
+									</ul>
+								)}
+								<ul className={styles.selectedUsersList}>
+									{selectedUsers.map((user) => (
+										<li key={user.id}>
+											<div>
+												{user.name} - {user.phone}
+											</div>
+											<Popconfirm
+												title="Are you sure to remove this user?"
+												onConfirm={() => handleDeleteUser(user.id)}
+												okText="Yes"
+												cancelText="No"
+											>
+												<Button type="link" danger size="small">
+													Remove
+												</Button>
+											</Popconfirm>
+										</li>
+									))}
+								</ul>
 							</Item>
 						</Form>
 					</Modal>

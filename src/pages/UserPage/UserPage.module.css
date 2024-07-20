@@ -6,22 +6,30 @@
 	background: #fff;
 	box-shadow: 0px 20px 27px 0px rgba(0, 0, 0, 0.05);
 	padding: 0 20px;
-}
-
-.userTitle {
-	width: 233.978px;
-	padding: 10px 0;
-}
-
-.userTitle h1 {
+  }
+  
+  .userTitle {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 20px; /* Adjust margin as needed */
+  }
+  
+  .userTitle h1 {
 	font-size: 24px;
 	font-weight: bold;
 	color: #4878d9;
 	font-style: normal;
 	line-height: 36px;
-}
-
-.createBtn {
+  }
+  
+  .searchBar {
+	flex: 1; /* Take remaining space */
+	align-items: center;
+	align-content: center;
+  }
+  
+  .createBtn {
 	text-align: right;
 	padding: 1rem;
-}
+  }
