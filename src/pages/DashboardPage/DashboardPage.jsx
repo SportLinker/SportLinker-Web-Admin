@@ -1,7 +1,6 @@
 import {
 	Box,
 	Card,
-	CardActions,
 	CardContent,
 	CardHeader,
 	Container,
@@ -14,9 +13,7 @@ import {
 	Typography,
 } from '@mui/material';
 import {useTheme} from '@mui/material/styles';
-import {Button} from 'antd';
 import {useEffect, useState} from 'react';
-import Chart from 'react-apexcharts';
 import {Helmet} from 'react-helmet';
 import ReactLoading from 'react-loading';
 import {useDispatch, useSelector} from 'react-redux';
@@ -59,19 +56,13 @@ const DashboardPage = () => {
 	const [year, setYear] = useState(currentYear);
 	const [isPlayersView, setIsPlayersView] = useState(true);
 	const [selectedTable, setSelectedTable] = useState('bookings');
-	const [showSelect, setShowSelect] = useState(false);
 
 	useEffect(() => {
 		dispatch(getAllDashboard({month, year}));
 	}, [dispatch, month, year]);
 
-	const toggleView = () => {
-		setIsPlayersView((prev) => !prev);
-	};
-
 	const handleChangeTable = (event) => {
 		setSelectedTable(event.target.value);
-		setShowSelect(false);
 	};
 
 	const handleMonthChange = (event) => {
@@ -84,10 +75,7 @@ const DashboardPage = () => {
 
 	const chartOptions = useChartOptions();
 
-	// Function to format numbers to one decimal place
-	const formatNumber = (num) => {
-		return num.toFixed(1); // Fixed to one decimal place
-	};
+	const formatNumber = (num) => num.toFixed(1);
 
 	if (!data) return <ReactLoading type="spin" color="#fff" />;
 
@@ -107,48 +95,68 @@ const DashboardPage = () => {
 								>
 									Dashboard Reports
 								</Typography>
+
 								<div style={{display: 'flex', justifyContent: 'flex-end'}}>
-									<FormControl
-										sx={{minWidth: 120, mr: 2, mb: 'auto', mt: 'auto'}}
-									>
+									<FormControl sx={{minWidth: 120, mr: 2}}>
 										<Select
 											labelId="select-month-label"
 											id="select-month"
 											value={month}
 											onChange={handleMonthChange}
 										>
-											<MenuItem value={1}>January</MenuItem>
-											<MenuItem value={2}>February</MenuItem>
-											<MenuItem value={3}>March</MenuItem>
-											<MenuItem value={4}>April</MenuItem>
-											<MenuItem value={5}>May</MenuItem>
-											<MenuItem value={6}>June</MenuItem>
-											<MenuItem value={7}>July</MenuItem>
-											<MenuItem value={8}>August</MenuItem>
-											<MenuItem value={9}>September</MenuItem>
-											<MenuItem value={10}>October</MenuItem>
-											<MenuItem value={11}>November</MenuItem>
-											<MenuItem value={12}>December</MenuItem>
+											{Array.from({length: 12}, (_, i) => (
+												<MenuItem key={i + 1} value={i + 1}>
+													{new Date(0, i).toLocaleString('default', {
+														month: 'long',
+													})}
+												</MenuItem>
+											))}
 										</Select>
 									</FormControl>
-									<FormControl sx={{minWidth: 120, mb: 'auto', mt: 'auto'}}>
+									<FormControl sx={{minWidth: 120}}>
 										<Select
 											labelId="select-year-label"
 											id="select-year"
 											value={year}
 											onChange={handleYearChange}
 										>
-											<MenuItem value={2022}>2022</MenuItem>
-											<MenuItem value={2023}>2023</MenuItem>
-											<MenuItem value={2024}>2024</MenuItem>
-											<MenuItem value={2025}>2025</MenuItem>
+											{[2022, 2023, 2024, 2025].map((y) => (
+												<MenuItem key={y} value={y}>
+													{y}
+												</MenuItem>
+											))}
 										</Select>
 									</FormControl>
 								</div>
 								<Grid container spacing={3}>
-									{/* Match Summary */}
-									<Grid item xs={12} md={4}>
-										<Box mb={3}>
+									<Grid item xs={3}>
+										<OverviewSummary
+											label="Total Players"
+											value={data.users.players.total_player.toString()}
+										/>
+									</Grid>
+									<Grid item xs={3}>
+										<OverviewSummary
+											label="Total Stadium Accounts"
+											value={data.users.stadiums.total_stadium_account.toString()}
+										/>
+									</Grid>
+									<Grid item xs={3}>
+										<OverviewSummary
+											label="Total Blogs"
+											value={data.blogs.total_blog.toString()}
+										/>
+									</Grid>
+									<Grid item xs={3}>
+										<OverviewSummary
+											label="Change from last month"
+											value={`${formatNumber(data.blogs.compare_last_month)}%`}
+										/>
+									</Grid>
+								</Grid>
+								<Grid container spacing={3}>
+									<Grid item xs={12}>
+										<Box>
 											<Card sx={{boxShadow: 3}}>
 												<CardHeader title="Match Summary" />
 												<Divider />
@@ -158,13 +166,13 @@ const DashboardPage = () => {
 														justifyContent="center"
 														spacing={3}
 													>
-														<Grid item xs={5}>
+														<Grid item xs={6}>
 															<OverviewSummary
 																label="Total Matches"
 																value={data.matchs.total_match.toString()}
 															/>
 														</Grid>
-														<Grid item xs={7}>
+														<Grid item xs={6}>
 															<OverviewSummary
 																label="Change from last month"
 																value={`${formatNumber(
@@ -185,170 +193,18 @@ const DashboardPage = () => {
 																),
 															},
 														]}
-														stats={[
-															{
-																label: 'Total Matches',
-																value: data.matchs.total_match.toString(),
-															},
-															{
-																label: 'Change from last month',
-																value: `${formatNumber(
-																	data.matchs.compare_last_month
-																)}%`,
-															},
-														]}
 													/>
 												</CardContent>
 											</Card>
 										</Box>
 									</Grid>
-
-									{/* Blog Summary */}
-									<Grid item xs={12} md={4}>
-										<Box mb={3}>
-											<Card sx={{boxShadow: 3}}>
-												<CardHeader title="Blog Summary" />
-												<Divider />
-												<CardContent>
-													<Stack
-														direction="row"
-														justifyContent="center"
-														spacing={3}
-													>
-														<Grid item xs={5}>
-															<OverviewSummary
-																label="Total Blogs"
-																value={data.blogs.total_blog.toString()}
-															/>
-														</Grid>
-														<Grid item xs={7}>
-															<OverviewSummary
-																label="Change from last month"
-																value={`${formatNumber(
-																	data.blogs.compare_last_month
-																)}%`}
-															/>
-														</Grid>
-													</Stack>
-													<Chart
-														options={chartOptions}
-														series={[
-															{
-																name: 'Blogs',
-																data: Array(7).fill(
-																	data.blogs.total_blog / 7
-																), // Dummy data
-															},
-														]}
-														type="bar"
-														height={200}
-													/>
-												</CardContent>
-											</Card>
-										</Box>
-									</Grid>
-
-									{/* User Summary */}
-									<Grid item xs={12} md={4}>
-										<Box mb={3}>
-											<Card sx={{boxShadow: 3}}>
-												<div
-													style={{
-														display: 'flex',
-														justifyContent: 'space-between',
-													}}
-												>
-													<CardHeader title="User Summary" />
-													<CardActions>
-														<Button onClick={toggleView}>
-															{isPlayersView
-																? 'Switch to Stadiums'
-																: 'Switch to Players'}
-														</Button>
-													</CardActions>
-												</div>
-												<Divider />
-
-												<CardContent>
-													<Stack
-														direction="row"
-														justifyContent="center"
-														spacing={3}
-													>
-														<Grid item xs={5}>
-															<OverviewSummary
-																label={
-																	isPlayersView
-																		? 'Total Players'
-																		: 'Total Stadium Accounts'
-																}
-																value={
-																	isPlayersView
-																		? data.users.players.total_player.toString()
-																		: data.users.stadiums.total_stadium_account.toString()
-																}
-															/>
-														</Grid>
-														<Grid item xs={7}>
-															<OverviewSummary
-																label="Change from last month:"
-																value={`${
-																	isPlayersView
-																		? formatNumber(
-																				data.users.players
-																					.compare_last_month
-																			)
-																		: formatNumber(
-																				data.users.stadiums
-																					.compare_last_month
-																			)
-																}%`}
-															/>
-														</Grid>
-													</Stack>
-													<Chart
-														options={chartOptions}
-														series={[
-															{
-																name: isPlayersView
-																	? 'Players'
-																	: 'Stadiums',
-																data: Array(7).fill(
-																	isPlayersView
-																		? formatNumber(
-																				data.users.players
-																					.total_player /
-																					7
-																			)
-																		: formatNumber(
-																				data.users.stadiums
-																					.total_stadium_account /
-																					7
-																			)
-																),
-															},
-														]}
-														type="bubble"
-														height={200}
-													/>
-												</CardContent>
-											</Card>
-										</Box>
-									</Grid>
-
-									{/* Booking Summary */}
+								</Grid>
+								<Grid container spacing={3}>
 									<Grid item xs={12}>
 										<Box mb={3}>
 											<Card sx={{boxShadow: 3, width: '100%'}}>
 												<div style={{display: 'flex'}}>
 													<CardHeader title="Booking Summary" />
-													<FormControl
-														sx={{
-															minWidth: 120,
-															mt: 'auto',
-															mb: 'auto',
-														}}
-													></FormControl>
 												</div>
 												<Divider />
 												<CardContent>
@@ -378,11 +234,13 @@ const DashboardPage = () => {
 														<Grid item xs={3}>
 															<OverviewSummary
 																label="Booking Revenue (30%)"
-																value={`${(data.bookings.revenues.total_revenue * 0.3).toFixed(2)} VNĐ`}
+																value={`${(
+																	data.bookings.revenues
+																		.total_revenue * 0.3
+																).toFixed(2)} VNĐ`}
 															/>
 														</Grid>
 													</Stack>
-
 													<OverviewBookKpi
 														chartSeries={[
 															{
