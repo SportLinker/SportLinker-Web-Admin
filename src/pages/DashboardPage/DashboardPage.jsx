@@ -22,7 +22,7 @@ import ReactLoading from 'react-loading';
 import {useDispatch, useSelector} from 'react-redux';
 import {getAllDashboardSelector, getLoadingDashboardSelector} from '../../redux/selectors';
 import {getAllDashboard} from '../../redux/slices/dashboardSlice';
-import {OverviewKpi} from './overview/OverviewKpi';
+import {OverviewBookKpi, OverviewKpi} from './overview/OverviewKpi';
 import {OverviewSummary} from './overview/OverviewSummary';
 
 const useChartOptions = () => {
@@ -340,11 +340,7 @@ const DashboardPage = () => {
 									<Grid item xs={12}>
 										<Box mb={3}>
 											<Card sx={{boxShadow: 3, width: '100%'}}>
-												<div
-													style={{
-														display: 'flex',
-													}}
-												>
+												<div style={{display: 'flex'}}>
 													<CardHeader title="Booking Summary" />
 													<FormControl
 														sx={{
@@ -352,24 +348,7 @@ const DashboardPage = () => {
 															mt: 'auto',
 															mb: 'auto',
 														}}
-													>
-														{/* <Select
-															labelId="select-table-label"
-															id="select-table"
-															value={selectedTable}
-															onChange={handleChangeTable}
-														>
-															<MenuItem value="bookings">
-																Bookings
-															</MenuItem>
-															<MenuItem value="incomes">
-																Incomes
-															</MenuItem>
-															<MenuItem value="revenues">
-																Revenues
-															</MenuItem>
-														</Select> */}
-													</FormControl>
+													></FormControl>
 												</div>
 												<Divider />
 												<CardContent>
@@ -380,98 +359,54 @@ const DashboardPage = () => {
 													>
 														<Grid item xs={3}>
 															<OverviewSummary
-																label={'Total Bookings'}
+																label="Total Bookings"
 																value={data.bookings.bookings.total_booking.toString()}
 															/>
 														</Grid>
 														<Grid item xs={3}>
 															<OverviewSummary
-																label={'Total Income'}
+																label="Total Income"
 																value={data.bookings.incomes.total_income.toString()}
 															/>
 														</Grid>
 														<Grid item xs={3}>
 															<OverviewSummary
-																label={'Total Revenue'}
+																label="Total Revenue"
 																value={`${data.bookings.revenues.total_revenue.toString()} VNĐ`}
 															/>
 														</Grid>
-
 														<Grid item xs={3}>
 															<OverviewSummary
 																label="Booking Revenue (30%)"
-																value={`${(
-																	data.bookings.revenues
-																		.total_revenue * 0.3
-																).toFixed(2)} VNĐ`}
+																value={`${(data.bookings.revenues.total_revenue * 0.3).toFixed(2)} VNĐ`}
 															/>
 														</Grid>
-														{/* 
-														<Grid item xs={3}>
-															<OverviewSummary
-																label="% Change from last month:"
-																value={
-																	selectedTable === 'bookings'
-																		? `${formatNumber(
-																				data.bookings
-																					.bookings
-																					.compare_last_month
-																			)}%`
-																		: selectedTable ===
-																			  'incomes'
-																			? `${formatNumber(
-																					data.bookings
-																						.incomes
-																						.compare_last_month
-																				)}%`
-																			: selectedTable ===
-																				  'revenues'
-																				? `${formatNumber(
-																						data
-																							.bookings
-																							.revenues
-																							.compare_last_month
-																					)}%`
-																				: ''
-																}
-															/>
-														</Grid> */}
 													</Stack>
 
-													{/* Chart based on selected table */}
-													<Chart
-														options={chartOptions}
-														series={[
+													<OverviewBookKpi
+														chartSeries={[
 															{
 																name:
-																	selectedTable === 'bookings'
-																		? 'Revenue'
-																		: 'Data',
-																data: Array(7).fill(
-																	formatNumber(
-																		selectedTable === 'bookings'
-																			? data.bookings.bookings
-																					.total_booking /
-																					7
-																			: selectedTable ===
-																				  'incomes'
-																				? data.bookings
-																						.incomes
-																						.total_income /
-																					7
-																				: selectedTable ===
-																					  'revenues'
-																					? data.bookings
-																							.revenues
-																							.total_revenue /
-																						7
-																					: 0
-																	)
-																),
+																	selectedTable
+																		.charAt(0)
+																		.toUpperCase() +
+																	selectedTable.slice(1),
+																data: data.bookings.bookings.booking_by_day_of_week
+																	.filter((item) => item !== null)
+																	.map((item) => ({
+																		x: [
+																			'Mon',
+																			'Tue',
+																			'Wed',
+																			'Thu',
+																			'Fri',
+																			'Sat',
+																			'Sun',
+																		][item.day],
+																		y: item.total,
+																	})),
 															},
 														]}
-														type="area"
-														height={200}
 													/>
 												</CardContent>
 											</Card>
