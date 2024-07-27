@@ -28,7 +28,10 @@ export const getLoadingTransactionSelector = (state) => state.transactionSlice.l
 export const getStadiumSelector = (state) => state.stadiumSlice?.stadiumInfo || {};
 export const getAllStadiumSelector = (state) => state.stadiumSlice?.stadiums || [];
 export const getLoadingStadiumSelector = (state) => state.stadiumSlice.loading;
-
+// bookings
+export const getBookingSelector = (state) => state.bookingSlice?.bookingInfo || {};
+export const getAllBookingSelector = (state) => state.bookingSlice?.bookings || [];
+export const getLoadingBookingSelector = (state) => state.bookingSlice.loading;
 // dashboard
 export const getAllDashboardSelector = (state) => state.dashboardSlice.dashboards;
 export const getLoadingDashboardSelector = (state) => state.dashboardSlice.loading;

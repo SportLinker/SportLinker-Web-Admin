@@ -21,6 +21,7 @@ export const DefaultLayout = ({children}) => {
 		// '/reports',
         // '/ads',
         // '/posts',
+		'/bookings',
 		'/transactions',
 		'/stadiums',
 		'/vouchers',
@@ -30,6 +31,7 @@ export const DefaultLayout = ({children}) => {
 		getItem('Dashboard', '/dashboard', <DashboardOutlined />),
 		getItem('Manage User', '/users', <UserOutlined />),
 		getItem('Manage Match', '/matches', <DisconnectOutlined />),
+		getItem('Manage Booking', '/bookings', <DisconnectOutlined />),
 		// getItem('Manage Report', '/reports', <FileTextOutlined />),
         // getItem('Manage Advertisement', '/ads', <FundViewOutlined />),
         // getItem('Manage Post', '/posts', <EditOutlined />),
@@ -90,17 +92,14 @@ export const DefaultLayout = ({children}) => {
 				{showHeaderFooter && <TopNavbar />}
 				<Content
 					style={{
-						overflow: 'hidden',
+						overflow: 'auto',
 						backgroundColor: '#FBFCFB',
 					}}
 				>
 					<div
 						style={{
 							minHeight: 360,
-							margin: '15px',
-							boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)', // Adjust shadow values as needed
-							borderRadius: '15px', // Optional: add border radius for rounded corners
-							padding: '20px', // Optional: add padding for inner content spacing
+							height: 790,
 							backgroundColor: '#ffffff', // Optional: set a background color if needed
 						}}
 					>

@@ -15,6 +15,7 @@ import TransactionPage from '../pages/TransactionPage/TransactionPage';
 import VoucherPage from '../pages/VoucherPage/VoucherPage';
 import PrivateRoute from './PrivateRoute';
 import { StadiumPage } from '../pages/StadiumPage/StadiumPage';
+import { BookingPage } from '../pages/BookingPage/BookingPage';
 
 export const AppRouters = () => {
 	return (
@@ -44,6 +45,14 @@ export const AppRouters = () => {
 					element={
 						<PrivateRoute>
 							<EventPage />
+						</PrivateRoute>
+					}
+				/>
+				<Route
+					path="/bookings"
+					element={
+						<PrivateRoute>
+							<BookingPage />
 						</PrivateRoute>
 					}
 				/>

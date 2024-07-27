@@ -7,6 +7,8 @@ import {transactionSlice} from './slices/transactionSlice'; // Import transactio
 import userLoginSlice from './slices/userLoginSlice';
 import {voucherSlice} from './slices/voucherSlice';
 import {stadiumSlice} from './slices/stadiumSlice';
+import {bookingSlice} from './slices/bookingSlice';
+
 import {userSlice} from './slices/userSlice';
 
 const rootPersistConfig = {
@@ -22,6 +24,7 @@ const rootReducer = combineReducers({
 	voucherSlice: voucherSlice.reducer,
 	transactionSlice: transactionSlice.reducer,
 	stadiumSlice: stadiumSlice.reducer,
+	bookingSlice: bookingSlice.reducer,
 	dashboardSlice: dashboardSlice.reducer,
 });
 

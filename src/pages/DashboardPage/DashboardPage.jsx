@@ -33,17 +33,10 @@ const DashboardPage = () => {
 	const [month, setMonth] = useState(currentMonth);
 	const [year, setYear] = useState(currentYear);
 	const [selectedTable, setSelectedTable] = useState('bookings');
-	const [dashboard, setDashboard] = useState([]);
 
 	useEffect(() => {
 		dispatch(getAllDashboard({month, year}));
 	}, [dispatch, month, year]);
-
-	useEffect(() => {
-		if (data) {
-			setDashboard(data);
-		}
-	}, [data]);
 
 	const handleMonthChange = (event) => {
 		setMonth(event.target.value);
@@ -60,7 +53,7 @@ const DashboardPage = () => {
 			<Helmet>
 				<title>Dashboard</title>
 			</Helmet>
-			<Box sx={{flexGrow: 1, py: 8, bgcolor: '#f4f6f8'}}>
+			<Box sx={{flexGrow: 1, py: 8}}>
 				<Container maxWidth="xl">
 					{loading ? (
 						<Box
@@ -116,25 +109,25 @@ const DashboardPage = () => {
 								<Grid item xs={3}>
 									<OverviewSummary
 										label="Total Players"
-										value={dashboard?.users?.players?.total_player.toString()}
+										value={data.users.players.total_player.toString()}
 									/>
 								</Grid>
 								<Grid item xs={3}>
 									<OverviewSummary
 										label="Total Stadium Accounts"
-										value={dashboard?.users?.stadiums?.total_stadium_account.toString()}
+										value={data.users.stadiums.total_stadium_account.toString()}
 									/>
 								</Grid>
 								<Grid item xs={3}>
 									<OverviewSummary
 										label="Total Blogs"
-										value={dashboard?.blogs?.total_blog.toString()}
+										value={data.blogs.total_blog.toString()}
 									/>
 								</Grid>
 								<Grid item xs={3}>
 									<OverviewSummary
 										label="Change from last month"
-										value={`${dashboard?.blogs?.compare_last_month}%`}
+										value={`${formatNumber(data.blogs.compare_last_month)}%`}
 									/>
 								</Grid>
 							</Grid>
@@ -153,13 +146,15 @@ const DashboardPage = () => {
 													<Grid item xs={6}>
 														<OverviewSummary
 															label="Total Matches"
-															value={dashboard?.matchs?.total_match.toString()}
+															value={data.matchs.total_match.toString()}
 														/>
 													</Grid>
 													<Grid item xs={6}>
 														<OverviewSummary
 															label="Change from last month"
-															value={`${dashboard?.matchs?.compare_last_month}%`}
+															value={`${formatNumber(
+																data.matchs.compare_last_month
+															)}%`}
 														/>
 													</Grid>
 												</Stack>
@@ -167,7 +162,7 @@ const DashboardPage = () => {
 													chartSeries={[
 														{
 															name: 'Total Matches',
-															data: dashboard?.matchs?.match_by_time.map(
+															data: data.matchs.match_by_time.map(
 																(item) => ({
 																	x: item.time,
 																	y: item.total_match,
@@ -198,27 +193,27 @@ const DashboardPage = () => {
 													<Grid item xs={3}>
 														<OverviewSummary
 															label="Total Bookings"
-															value={dashboard?.bookings?.bookings?.total_booking.toString()}
+															value={data.bookings.bookings.total_booking.toString()}
 														/>
 													</Grid>
 													<Grid item xs={3}>
 														<OverviewSummary
 															label="Total Income"
-															value={dashboard?.bookings?.incomes?.total_income.toString()}
+															value={data.bookings.incomes.total_income.toString()}
 														/>
 													</Grid>
 													<Grid item xs={3}>
 														<OverviewSummary
 															label="Total Revenue"
-															value={`${dashboard?.bookings?.revenues?.total_revenue.toString()} VNĐ`}
+															value={`${data.bookings.revenues.total_revenue.toString()} VNĐ`}
 														/>
 													</Grid>
 													<Grid item xs={3}>
 														<OverviewSummary
 															label="Booking Revenue (30%)"
 															value={`${(
-																dashboard?.bookings?.revenues
-																	?.total_revenue * 0.3
+																data.bookings.revenues
+																	.total_revenue * 0.3
 															).toFixed(2)} VNĐ`}
 														/>
 													</Grid>
@@ -231,7 +226,7 @@ const DashboardPage = () => {
 																	.charAt(0)
 																	.toUpperCase() +
 																selectedTable.slice(1),
-															data: dashboard?.bookings?.bookings?.booking_by_day_of_week
+															data: data.bookings.bookings.booking_by_day_of_week
 																.filter((item) => item !== null)
 																.map((item) => ({
 																	x: [

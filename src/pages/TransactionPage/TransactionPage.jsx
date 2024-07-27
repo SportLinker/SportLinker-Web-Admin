@@ -1,8 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import {Table, Tag, Typography, Modal, Avatar, Button, Select, Input, Form} from 'antd';
+import {Table, Tag, Typography, Modal, Avatar, Button, Select, Input, Form, message} from 'antd';
 import {Helmet} from 'react-helmet';
 import dayjs from 'dayjs';
+import axios from 'axios'; // Import axios for API calls
 import {fetchTransactions, updateTransactionStatus} from '../../redux/slices/transactionSlice';
 import {getAllTransactionsSelector, getLoadingTransactionSelector} from '../../redux/selectors';
 import styles from './TransactionPage.module.css';
@@ -83,6 +84,51 @@ const TransactionPage = () => {
 			setTransactionType(value);
 		}
 		setCurrentPage(1); // Reset page when changing filters
+	};
+
+	const handleGenerateQR = async () => {
+		if (
+			selectedTransaction &&
+			transactionType === 'deposit' &&
+			selectedTransaction.bank_account &&
+			selectedTransaction.bank_account_name &&
+			selectedTransaction.acqId &&
+			selectedTransaction.amount &&
+			selectedTransaction.addInfo
+		) {
+			try {
+				const apiUrl = 'https://api.vietqr.io/v2/generate';
+				const payload = {
+					accountNo: selectedTransaction.bank_account,
+					accountName: selectedTransaction.bank_account_name,
+					acqId: selectedTransaction.acqId,
+					amount: selectedTransaction.amount,
+					addInfo: selectedTransaction.transaction_code,
+					format: 'text',
+					template: 'compact',
+				};
+				const headers = {
+					'Content-Type': 'application/json',
+					'x-client-id': '<d1763c87-7467-4183-8d6f-fc8c6ddaaad9>',
+					'x-api-key': '<53fc60dc-9baa-4531-8c12-59f18eedb38d>',
+				};
+
+				const response = await axios.post(apiUrl, payload, {headers});
+
+				if (response.data.code === '00') {
+					message.success('QR Code generated successfully');
+					console.log(response.data); // Log response data containing QR code details
+					// Optionally, you can store QR code data or display it in your UI
+				} else {
+					message.error('Failed to generate QR Code');
+				}
+			} catch (error) {
+				console.error('Error generating QR Code:', error);
+				message.error('Error generating QR Code');
+			}
+		} else {
+			message.warning('Insufficient information to generate QR Code');
+		}
 	};
 
 	return (
@@ -193,6 +239,7 @@ const TransactionPage = () => {
 									</div>
 								)}
 							/>
+							
 						</>
 					)}
 				</Table>
@@ -262,6 +309,9 @@ const TransactionPage = () => {
 											</span>
 										</div>
 									</div>
+                                    <Button key="generateQR" type="primary" onClick={handleGenerateQR}>
+								Generate QR Code
+							</Button>
 								</>
 							)}
 							<Form layout="vertical" style={{marginTop: 16}}>
