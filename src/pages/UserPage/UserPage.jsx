@@ -209,6 +209,9 @@ export const UserPage = () => {
 							date_of_birth ? dayjs(date_of_birth).format('DD-MM-YYYY') : ''
 						}
 					/>
+					 <Column title="Premium" dataIndex="is_premium" key="is_premium" render={(is_premium) => (
+                        is_premium ? <Tag color="gold">Premium</Tag> : <Tag>Non-Premium</Tag>
+                    )} />
 					<Column title="Gender" dataIndex="gender" key="gender" />
 					<Column title="Status" dataIndex="status" key="status" />
 
