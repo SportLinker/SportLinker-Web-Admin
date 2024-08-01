@@ -116,19 +116,23 @@ const DashboardPage = () => {
 								<Grid item xs={3}>
 									<OverviewSummary
 										label="Total Players"
-										value={dashboard?.users?.players?.total_player.toString()}
+										value={dashboard?.users?.players?.total_player.toLocaleString(
+											'vi-VN'
+										)}
 									/>
 								</Grid>
 								<Grid item xs={3}>
 									<OverviewSummary
 										label="Total Stadium Accounts"
-										value={dashboard?.users?.stadiums?.total_stadium_account.toString()}
+										value={dashboard?.users?.stadiums?.total_stadium_account.toLocaleString(
+											'vi-VN'
+										)}
 									/>
 								</Grid>
 								<Grid item xs={3}>
 									<OverviewSummary
 										label="Total Blogs"
-										value={dashboard?.blogs?.total_blog.toString()}
+										value={dashboard?.blogs?.total_blog.toLocaleString('vi-VN')}
 									/>
 								</Grid>
 								<Grid item xs={3}>
@@ -153,7 +157,9 @@ const DashboardPage = () => {
 													<Grid item xs={6}>
 														<OverviewSummary
 															label="Total Matches"
-															value={dashboard?.matches?.total_match.toString()}
+															value={dashboard?.matches?.total_match.toLocaleString(
+																'vi-VN'
+															)}
 														/>
 													</Grid>
 													<Grid item xs={6}>
@@ -198,19 +204,23 @@ const DashboardPage = () => {
 													<Grid item xs={3}>
 														<OverviewSummary
 															label="Total Bookings"
-															value={dashboard?.bookings?.bookings?.total_booking.toString()}
+															value={dashboard?.bookings?.bookings?.total_booking.toLocaleString(
+																'vi-VN'
+															)}
 														/>
 													</Grid>
 													<Grid item xs={3}>
 														<OverviewSummary
 															label="Total Income"
-															value={dashboard?.revenues?.income?.total_income.toString()}
+															value={dashboard?.revenues?.income?.total_income.toLocaleString(
+																'vi-VN'
+															)}
 														/>
 													</Grid>
 													<Grid item xs={3}>
 														<OverviewSummary
 															label="Total Revenue"
-															value={`${dashboard?.revenues?.revenue?.total_revenue.toString()} VNĐ`}
+															value={`${dashboard?.revenues?.revenue?.total_revenue.toLocaleString('vi-VN')} VNĐ`}
 														/>
 													</Grid>
 													<Grid item xs={3}>
@@ -219,7 +229,7 @@ const DashboardPage = () => {
 															value={`${(
 																dashboard?.revenues?.revenue
 																	?.total_revenue * 0.3
-															).toFixed(2)} VNĐ`}
+															).toLocaleString('vi-VN')} VNĐ`}
 														/>
 													</Grid>
 												</Stack>
