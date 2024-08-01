@@ -112,8 +112,12 @@ const DashboardPage = () => {
 										value={data.users.players.total_player.toString()}
 									/>
 								</Grid>
-
-								
+								<Grid item xs={3}>
+									<OverviewSummary
+										label="Total Premiums"
+										value={data.premiums.total_premium.toString()}
+									/>
+								</Grid>
 								<Grid item xs={3}>
 									<OverviewSummary
 										label="Total Stadium Accounts"
@@ -201,21 +205,20 @@ const DashboardPage = () => {
 													<Grid item xs={3}>
 														<OverviewSummary
 															label="Total Income"
-															value={data.bookings.incomes.total_income.toString()}
+															value={data.revenues.income.total_income.toString()}
 														/>
 													</Grid>
 													<Grid item xs={3}>
 														<OverviewSummary
 															label="Total Revenue"
-															value={`${data.bookings.revenues.total_revenue.toString()} VNĐ`}
+															value={`${data.revenues.revenue.total_revenue.toString()} VNĐ`}
 														/>
 													</Grid>
 													<Grid item xs={3}>
 														<OverviewSummary
 															label="Booking Revenue (30%)"
 															value={`${(
-																data.bookings.revenues
-																	.total_revenue * 0.3
+																data.revenues.revenue.total_revenue * 0.3
 															).toFixed(2)} VNĐ`}
 														/>
 													</Grid>
