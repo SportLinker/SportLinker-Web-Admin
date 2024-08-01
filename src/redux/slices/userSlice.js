@@ -4,12 +4,17 @@ import { api } from '../../services/api';
 // Fetch users
 export const fetchUsers = createAsyncThunk(
   'users/fetchAll',
-  async ({ currentPage, pageSize, name }, { rejectWithValue }) => {
+  async ({ currentPage, pageSize, name, isPremium }, { rejectWithValue }) => {
     try {
       let url = `/users?page_size=${pageSize}&page_number=${currentPage}`;
+      
       if (name) {
         url += `&name=${name}`;
       }
+      if (isPremium !== undefined) {
+        url += `&is_premium=${isPremium}`;
+      }
+
       const response = await api.get(url);
       return response.data.metadata;
     } catch (error) {
@@ -17,6 +22,7 @@ export const fetchUsers = createAsyncThunk(
     }
   }
 );
+
 
 // Create user
 export const createUser = createAsyncThunk('users/create', async (userData, { rejectWithValue }) => {
