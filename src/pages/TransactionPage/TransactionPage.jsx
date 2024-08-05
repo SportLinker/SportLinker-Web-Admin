@@ -78,8 +78,8 @@ const TransactionPage = () => {
 	};
 
 	const handleTypeFilterChange = (value) => {
-		if (value === 'all') {
-			setTransactionType(''); // Set transactionType to empty string to show all transactions
+		if (value === 'premium') {
+			setTransactionType(value); // Set transactionType to empty string to show all transactions
 		} else {
 			setTransactionType(value);
 		}
@@ -145,7 +145,7 @@ const TransactionPage = () => {
 					style={{width: 120, marginLeft: 16}}
 					onChange={handleTypeFilterChange}
 				>
-					<Option value="all">All</Option>
+					<Option value="premium">Premium</Option>
 					<Option value="deposit">Deposit</Option>
 					<Option value="withdraw">Withdraw</Option>
 				</Select>
@@ -167,11 +167,13 @@ const TransactionPage = () => {
 					})}
 					onChange={handleTableChange}
 				>
-					<Column
-						title="Transaction Code"
-						dataIndex="transaction_code"
-						key="transaction_code"
-					/>
+					 {transactionType !== 'premium' && (
+            <Column
+              title="Transaction Code"
+              dataIndex="transaction_code"
+              key="transaction_code"
+            />
+          )}
 					<Column
 						title="Amount"
 						dataIndex="amount"
