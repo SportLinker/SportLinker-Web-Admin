@@ -108,11 +108,11 @@ const LoginPage = () => {
 									</Checkbox>
 								</Form.Item>
 
-								<Form.Item>
+								{/* <Form.Item>
 									<a href="/signup" className={styles.forgotPassword}>
 										Forgot password?
 									</a>
-								</Form.Item>
+								</Form.Item> */}
 							</div>
 
 							<Form.Item className={styles.centerButton}>

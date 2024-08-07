@@ -27,7 +27,7 @@ export const UserPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(5);
   const [searchTerm, setSearchTerm] = useState('');
-  const [premiumFilter, setPremiumFilter] = useState(''); // New state for premium filter
+  const [premiumFilter, setPremiumFilter] = useState('');
 
   const allUser = useSelector(getAllUserSelector);
   const loading = useSelector(getLoadingUserSelector);
@@ -45,6 +45,7 @@ export const UserPage = () => {
 
   const handleCreateUser = () => {
     setModalVisible(true);
+    setSelectedUser(null); // Ensure selectedUser is null for create operation
     form.resetFields();
   };
 
@@ -258,7 +259,6 @@ export const UserPage = () => {
           />
         </Table>
 
-        {/* Create/Update User Modal */}
         <Modal
           title={selectedUser ? 'Update User' : 'Create User'}
           visible={modalVisible}
@@ -270,12 +270,22 @@ export const UserPage = () => {
             <Item name="name" label="Name" rules={[{ required: true, message: 'Please input the name!' }]}>
               <Input />
             </Item>
-            <Item name="email" label="Email" rules={[{ required: true, message: 'Please input the email!' }]}>
-              <Input />
-            </Item>
-            <Item name="phone" label="Phone">
-              <Input />
-            </Item>
+            {!selectedUser && (
+              <>
+                <Item name="email" label="Email" rules={[{ required: true, message: 'Please input the email!' }]}>
+                  <Input />
+                </Item>
+                <Item name="phone" label="Phone">
+                  <Input />
+                </Item>
+                <Item name="status" label="Status">
+                  <Select>
+                    <Option value="active">Active</Option>
+                    <Option value="inactive">Inactive</Option>
+                  </Select>
+                </Item>
+              </>
+            )}
             <Item name="role" label="Role" rules={[{ required: true, message: 'Please select the role!' }]}>
               <Select>
                 <Option value="player">Player</Option>
@@ -295,12 +305,6 @@ export const UserPage = () => {
                 <Option value="other">Other</Option>
               </Select>
             </Item>
-            <Item name="status" label="Status">
-              <Select>
-                <Option value="active">Active</Option>
-                <Option value="inactive">Inactive</Option>
-              </Select>
-            </Item>
             {!selectedUser && (
               <Item name="password" label="Password" rules={[{ validator: validatePassword }]}>
                 <Input.Password />
@@ -309,16 +313,15 @@ export const UserPage = () => {
           </Form>
         </Modal>
 
-        {/* Delete Confirmation Modal */}
         <Modal
           title="Confirm Deletion"
           visible={deleteModalVisible}
           onOk={handleDeleteConfirm}
           onCancel={handleDeleteCancel}
-          okText="Delete"
-          cancelText="Cancel"
+          okText="Yes"
+          cancelText="No"
         >
-          <p>Are you sure you want to delete {selectedUser?.name}?</p>
+          <p>Are you sure you want to delete this user?</p>
         </Modal>
       </div>
     </>
